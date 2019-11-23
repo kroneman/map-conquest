@@ -1,0 +1,62 @@
+@import "../../styles/variables.scss";
+
+.players-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  color: #fff;
+
+  &__title {
+    color: #fff;
+  }
+
+  &__item {
+    margin-top: 10px;
+    position: relative;
+  }
+
+  &__update {
+    display: flex;
+    margin-right: 150px;
+  }
+
+  &__color-input {
+    position: relative;
+    background: #fff;
+    max-width: 100px;
+  }
+
+  &__color-box {
+    display: inline-block;
+    position: relative;
+    background: #fff;
+    width: 10px;
+    height: 10px;
+  }
+
+  &__edit {
+    padding: 0 5px;
+    z-index: 1;
+    background: $color-styleguide-primary;
+    cursor: pointer;
+    position: absolute;
+    right: -7px;
+    display: flex;
+    align-items: center;
+    top: 0;
+    bottom: 0;
+
+    &-cancel,
+    &-confirm,
+    &-button {
+      transition: color 0.2s ease-in-out;
+      &:hover {
+        color: darken(#fff, 15%);
+      }
+    }
+
+    &-cancel {
+      padding-right: 5px;
+    }
+  }
+}

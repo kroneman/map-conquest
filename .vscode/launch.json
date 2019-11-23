@@ -1,0 +1,122 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Server",
+      "runtimeExecutable": "node",
+      "cwd": "${workspaceRoot}",
+      "args": [
+        "--inspect-brk=5859",
+        "--",
+        "./server/server.js"
+      ],
+      "port": 5859
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Bot",
+      "runtimeExecutable": "node",
+      "cwd": "${workspaceRoot}",
+      "args": [
+        "--inspect-brk=5859",
+        "--",
+        "./bots/bot.js"
+      ],
+      "port": 5859
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "BotChallenger",
+      "runtimeExecutable": "node",
+      "cwd": "${workspaceRoot}",
+      "args": [
+        "--inspect-brk=5859",
+        "--",
+        "./bots/challenger.js"
+      ],
+      "port": 5859
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Tools:Mapbox Dataset",
+      "runtimeExecutable": "node",
+      "cwd": "${workspaceRoot}",
+      "args": [
+        "--inspect-brk=5859",
+        "--",
+        "./tools/get-mapbox-dataset.js"
+      ],
+      "port": 5859
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Tools:Validate Mapbox Dataset",
+      "runtimeExecutable": "node",
+      "cwd": "${workspaceRoot}",
+      "args": [
+        "--inspect-brk=5859",
+        "--",
+        "./tools/validate-mapbox-dataset.js"
+      ],
+      "port": 5859
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Tools:CenterofMass Mapbox Dataset",
+      "runtimeExecutable": "node",
+      "cwd": "${workspaceRoot}",
+      "args": [
+        "--inspect-brk=5859",
+        "--",
+        "./tools/mapbox-dataset-add-center-of-mass.js"
+      ],
+      "port": 5859
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Tools:TerritoryList Mapbox Dataset",
+      "runtimeExecutable": "node",
+      "cwd": "${workspaceRoot}",
+      "args": [
+        "--inspect-brk=5859",
+        "--",
+        "./tools/create-territory-list.js"
+      ],
+      "port": 5859
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Tools:TerritoryGraph",
+      "runtimeExecutable": "node",
+      "cwd": "${workspaceRoot}",
+      "args": [
+        "--inspect-brk=5859",
+        "--",
+        "./tools/graph/territoryGraph.js"
+      ],
+      "port": 5859
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Tools:GeoJsonToSvg",
+      "runtimeExecutable": "node",
+      "cwd": "${workspaceRoot}",
+      "args": [
+        "--inspect-brk=5859",
+        "--",
+        "./tools/geo-json-to-svg.js"
+      ],
+      "port": 5859
+    }
+  ]
+}

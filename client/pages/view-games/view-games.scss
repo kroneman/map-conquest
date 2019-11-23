@@ -1,0 +1,59 @@
+@import '../../styles/variables.scss';
+
+.view-games {
+  max-width: 600px;
+  margin: 0 auto;
+  color: #fff;
+  width: 100%;
+  background: rgba($color-styleguide-secondary, .7);
+
+  &__content {
+    padding: 0 40px 40px;
+  }
+
+  &__title {
+    font-size: 50px;
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+  }
+
+  &__list {
+    list-style-type: none;
+    min-height: 200px;
+    padding: 30px 0;
+    margin: 0;
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    
+    &-info {
+      flex: 1 1 60%;
+      span {
+        display: block;
+        margin-top: 3px;
+      }
+    }
+
+    &-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    &-button {
+      flex: 1 1 40%;
+      cursor: pointer;
+      text-decoration: underline;
+
+      &:hover {
+        color: darken(#fff, 20%);
+      }
+    }
+  }
+
+  &__create-game {
+    text-decoration: none;
+  }
+}

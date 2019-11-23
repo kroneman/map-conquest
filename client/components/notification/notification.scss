@@ -1,0 +1,30 @@
+@import '../../styles/variables.scss';
+
+$color-background: darken($color-styleguide-primary, 20%) !default;
+
+.notification {
+  background: $color-background;
+  color: #fff;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10; // place it above other thigns
+  border-top: 1px rgba(255, 255, 255, .2) solid;
+  // text-align: center;
+  display: none;
+  padding: 10px;
+  justify-content: center;
+
+  &__message {
+    position: relative;
+    width: 50%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &.is-open {
+    display: flex;
+  }
+}

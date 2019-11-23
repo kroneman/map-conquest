@@ -1,0 +1,79 @@
+@import '../../styles/variables.scss';
+
+$container-width: 40% !default;
+$bottom-corner-radius: 3px !default;
+
+$color-background: darken($color-styleguide-primary, 20%) !default;
+$color-text: #fff !default;
+
+$color-list-border-right: $color-text !default;
+$color-list-background: lighten($color-background, 25%) !default;
+
+.turn {
+  &-phase {
+    margin: 0 auto;
+    background: $color-background;
+    color: $color-text;
+    width: $container-width;
+    border-bottom-right-radius: $bottom-corner-radius;
+    border-bottom-left-radius: $bottom-corner-radius;
+    overflow: hidden;
+
+    &__text {
+      text-align: center;
+      padding: 10px;
+      position: relative;
+      user-select: none;
+    }
+
+    &__button {
+      background: transparent;
+      border: none;
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      color: $color-text;
+      border: 1px solid transparent;
+      cursor: pointer;
+
+      &:hover {
+        // border: 1px solid $color-text;
+        color: $color-text;
+        text-decoration: underline;
+        background: $color-background;
+      }
+    }
+
+    &__container {
+      position: relative;
+    }
+  }
+
+  &-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  
+    &__item {
+      flex: 0 0 33.33%;
+      padding: 5px;
+      text-align: center;
+      cursor: pointer;
+      background: $color-list-background;
+      border-right: 1px solid $color-list-border-right;
+
+      &.is-active {
+        background: #fff;
+      }
+
+      &:last-child {
+        border-right-color: transparent;
+      }
+    }
+  }
+}

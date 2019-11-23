@@ -1,0 +1,26 @@
+{
+  "extends": [
+    "plugin:vue/recommended",
+    "airbnb"
+  ],
+  "rules": {
+    "comma-dangle": ["error", "never"],
+    "no-use-before-define": [
+      "error",
+      { "functions": false, "classes": true, "variables": true }
+    ],
+    "no-param-reassign": [
+      "error",
+      {
+        "props": true,
+        "ignorePropertyModificationsFor": [
+          "state"
+        ]
+      }
+    ]
+  },
+  "env": {
+    "browser": true,
+    "node": true
+  }
+}

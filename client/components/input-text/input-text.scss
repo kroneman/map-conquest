@@ -1,0 +1,23 @@
+@import '../../styles/variables.scss';
+
+.input-text {
+  background: transparent;
+  color: #fff;
+  border: none;
+  border-bottom: 1px solid #fff;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:focus {
+    outline-color: darken(#fff, 15%);
+    outline-width: 0;
+    border-bottom-width: 2px;
+  }
+
+  &__wrapper {
+    position: relative;
+    width: 100%;
+  }
+}

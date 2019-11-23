@@ -1,0 +1,40 @@
+@import '../../styles/variables.scss';
+
+.lobby-input {
+  position: relative;
+
+  &__label {
+    display: block;
+  }
+
+  &__value {
+    display: flex;
+    position: relative;
+  }
+
+  &__edit {
+    padding: 0 5px;
+    z-index: 1;
+    background: transparent;
+    cursor: pointer;
+    position: absolute;
+    right: -7px;
+    display: flex;
+    align-items: center;
+    top: 0;
+    bottom: 0;
+  }
+
+  &__cancel,
+  &__confirm,
+  &__button {
+    transition: color .2s ease-in-out;
+    &:hover {
+      color: darken(#fff, 15%);
+    }
+  }
+
+  &__cancel {
+    padding-right: 5px;
+  }
+}

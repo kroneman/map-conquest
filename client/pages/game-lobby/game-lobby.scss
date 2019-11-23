@@ -1,0 +1,41 @@
+@import '../../styles/variables.scss';
+
+.lobby {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  color: #fff;
+  background: rgba($color-styleguide-secondary, .7);
+  transition: all .4 ease-in-out;
+
+  &__players-title {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  &__add-bot-button {
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: normal;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  &__content {
+    padding: 0 40px 40px;
+  }
+
+  &-actions {
+    margin-top: 30px;
+    display: flex;
+  }
+
+  &-error-message {
+    margin-left: 40px;
+  }
+}

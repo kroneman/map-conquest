@@ -1,0 +1,33 @@
+@import "../../styles/variables.scss";
+
+.reinforce-panel {
+  padding: 10px 15px;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 200px;
+  background: darken($color-styleguide-primary, 20%);
+  color: #fff;
+
+  &__info  {
+    display: flex;
+    flex-wrap: nowrap;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__id {
+    display: block;
+    padding: 5px;
+  }
+
+  &__amount {
+    padding: 0 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+}

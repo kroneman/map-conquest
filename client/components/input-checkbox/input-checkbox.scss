@@ -1,0 +1,28 @@
+@import '../../styles/variables.scss';
+
+.input-checkbox {
+  background: transparent;
+  color: #fff;
+  border: none;
+  border-bottom: 1px solid #fff;
+  width: auto;
+  margin-right: 10px;
+  display: inline-block;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:focus {
+    outline-color: darken(#fff, 15%);
+    outline-width: 5px;
+  }
+
+  &__wrapper {
+    position: relative;
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: center;
+  }
+}

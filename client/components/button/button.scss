@@ -1,0 +1,31 @@
+@import '../../styles/variables.scss';
+
+.button {
+  &,
+  &:visited,
+  &:active {
+    text-decoration: none;
+  }
+  font-size: 1em;
+
+  &--no-wrap {
+    white-space: nowrap;
+  }
+
+  &--primary {
+    cursor: pointer;
+    transition: all .2s ease-in-out;
+    display: flex;
+    flex-wrap: nowrap;
+    padding: 0 30px;
+    height: 40px;
+    border: 1px solid #fff;
+    background: transparent;
+    color: #fff;
+
+    &:hover {
+      background: #fff;
+      color: $color-styleguide-primary;
+    }
+  }
+}

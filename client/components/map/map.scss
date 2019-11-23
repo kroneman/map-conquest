@@ -1,0 +1,68 @@
+@import '../../styles/variables.scss';
+
+.game-map {
+  background: #226c8a;
+  width:100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+
+  svg {
+    width:100%;
+    height: 100%;
+  }
+
+  text,
+  .point {
+    pointer-events: none;
+    user-select: none;
+  }
+
+  path {
+    cursor: pointer;
+  }
+}
+
+.animated-map {
+  top: 0;
+  position: fixed;
+  z-index: -1;
+
+  svg {
+    opacity: 1;
+  }
+
+  text {
+    display: none;
+  }
+  
+  .point {
+    display: none;
+  }
+  
+  .polygon {
+    stroke: transparent;
+    fill: transparent;
+  }
+  
+  .svg-path-animation--start {
+    stroke: #fff;
+    stroke-width: 1;
+    animation-name: draw;
+    animation-duration: 1s;
+    animation-fill-mode: forwards; // Stay on the last frame
+    animation-iteration-count: 1; // Run only once
+    animation-timing-function: linear;
+
+    .polygon {
+      transition: fill 1s ease-in;
+    }
+  }
+}
+
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}

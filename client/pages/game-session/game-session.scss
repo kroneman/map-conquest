@@ -1,0 +1,39 @@
+@import "../../styles/variables.scss";
+
+$chat-height: 300px;
+$panel-height: $chat-height;
+
+.game-session {
+  color: #fff;
+
+  &__unclaimed-territories {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1;
+    color: #fff;
+  }
+
+  &__player-info {
+    position: fixed; 
+    left: 20px;
+    top: 40px;
+    z-index: 1;
+    user-select: none;
+  }
+
+  &__turn-phase {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+  }
+
+  &__map {
+    position: fixed;
+    bottom: 0;
+    top: 0;
+    width: 100%;
+  }
+}

@@ -1,0 +1,15 @@
+@import '../../styles/variables.scss';
+
+.settings {
+  max-width: 500px;
+  margin: 0 auto;
+  color: #fff;
+  padding: 50px 0;
+
+  &__title {
+    font-size: 50px;
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+  }
+}

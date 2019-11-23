@@ -1,0 +1,19 @@
+@import '../../styles/variables.scss';
+
+.about {
+  max-width: 500px;
+  margin: 0 auto;
+  color: #fff;
+  padding: 50px 0;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  &__title {
+    font-size: 50px;
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    flex: 1 1 100%;
+  }
+}

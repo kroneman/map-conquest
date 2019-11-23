@@ -1,0 +1,87 @@
+{
+  "name": "map-conquest",
+  "version": "1.0.0",
+  "description": "A risk-like game where conquering the entire map is the objective",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./server/server.js",
+    "dev": "nodemon ./server/server.js",
+    "build": "webpack",
+    "watch": "webpack -w",
+    "lint": "eslint ./server/**/*",
+    "clean-logs": "node ./tools/clean-logs.js",
+    "refresh-data": "npm run get-mapbox-dataset && npm run validate-mapbox-dataset && npm run mapbox-dataset-add-center-of-mass && npm run create-territory-list",
+    "get-mapbox-dataset": "node ./tools/get-mapbox-dataset.js",
+    "validate-mapbox-dataset": "node ./tools/validate-mapbox-dataset.js",
+    "mapbox-dataset-add-center-of-mass": "node ./tools/mapbox-dataset-add-center-of-mass.js",
+    "create-territory-list": "node ./tools/create-territory-list.js",
+    "bot:dev": "nodemon ./bots/bot.js --config ./nodemon.bots.json",
+    "bot-challenger:dev": "nodemon ./bots/challenger.js --config ./nodemon.bots.json",
+    "territory-graph": "nodemon ./tools/graph/territoryGraph.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lennart Kroneman",
+  "license": "ISC",
+  "dependencies": {
+    "@turf/turf": "^5.1.6",
+    "axios": "^0.19.0",
+    "dotenv": "^8.2.0",
+    "epsg-index": "^1.0.0",
+    "express": "^4.17.1",
+    "express-winston": "^3.3.0",
+    "fs-extra": "^8.1.0",
+    "geojson-to-svg": "git://github.com/kroneman/geojson2svg.git#add-attributes",
+    "html-webpack-plugin": "^3.2.0",
+    "lodash": "^4.17.15",
+    "mini-css-extract-plugin": "^0.7.0",
+    "proj4": "^2.5.0",
+    "socket.io": "^2.2.0",
+    "socket.io-client": "^2.2.0",
+    "vue": "^2.6.10",
+    "vue-router": "^3.0.7",
+    "vuex": "^3.1.1",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/runtime": "^7.5.5",
+    "babel-loader": "^8.0.6",
+    "copy-webpack-plugin": "^5.0.3",
+    "core-js": "^3.1.4",
+    "css-loader": "^2.1.1",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.14.3",
+    "eslint-plugin-vue": "^5.2.3",
+    "file-loader": "^4.0.0",
+    "husky": "^3.0.3",
+    "lint-staged": "^9.2.1",
+    "node-sass": "^4.12.0",
+    "nodemon": "^1.19.1",
+    "sass-loader": "^7.1.0",
+    "scss-loader": "0.0.1",
+    "vue-loader": "^14.2.4",
+    "vue-template-compiler": "^2.6.10",
+    "webpack": "^4.33.0",
+    "webpack-cli": "^3.3.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ],
+    "*.vue": [
+      "eslint --fix",
+      "git add"
+    ]
+  }
+}

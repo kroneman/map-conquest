@@ -1,0 +1,49 @@
+@import '../../styles/variables.scss';
+
+.navigation {
+  width: 100%;
+  background: rgba($color-styleguide-secondary, .7);
+  color: #fff;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  padding: 8px 20px;
+
+  &__back {
+    border-right: 1px solid #fff;
+    // padding: 10px;
+    text-transform: uppercase;
+    height: 100%;
+    font-size: 12px;
+    padding-right: 20px;
+    cursor: pointer;
+
+    &:hover {
+      color: darken(#fff, 20%);
+    }
+  }
+
+  &-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    padding-left: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    text-transform: uppercase;
+
+    &__item {
+      cursor: pointer;
+      margin-right: 20px;
+      font-size: 12px;
+
+      &:hover {
+        color: darken(#fff, 20%);
+      }
+    }
+  }
+}
