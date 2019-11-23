@@ -9,6 +9,8 @@ If you want to see a quick example of bots playing the game i uploaded a short v
 
 Issues and contributions are welcome. As I mentioned earlier this project is a way for me to continue learning & building.
 
+![map-conquest](./map-conquest.jpg "Logo Title Text 1")
+
 ## Node version
 
 Built on `node v12.13.1` && `npm 6.12.1`, you may find some binding incompatibilities with earlier versions of node.
