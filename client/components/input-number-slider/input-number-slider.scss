@@ -1,0 +1,129 @@
+@import '../../styles/variables.scss';
+
+$input-number-position-left: 50%;
+$input-number-position-bottom: 0;
+
+$input-number-slider-z-index: 100 !default;
+$input-number-slider-width: 200px !default;
+$input-number-slider-height: 50px !default;
+$input-number-slider-spacing: 20px !default;
+$input-number-slider-options-spacing: 34px !default;
+
+// Theme
+$input-number-slider-background: $color-styleguide-secondary;
+$input-number-slider-color: #fff;
+$input-number-slider-color-active: $color-styleguide-primary;
+
+@mixin list-reset {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+@mixin hide-scroll-bar {
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    white-space: nowrap;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.input-number-slider {
+    $component: &;
+
+    min-width: $input-number-slider-width;
+    height: $input-number-slider-height;
+    position: fixed;
+    left: $input-number-position-left;
+    bottom: $input-number-position-bottom;
+    transform: translateX(-50%);
+    z-index: $input-number-slider-z-index;
+
+    background: $input-number-slider-background;
+
+    &__slider {
+        @include hide-scroll-bar;
+        position: relative;
+        margin-left: $input-number-slider-spacing;
+        margin-right: $input-number-slider-spacing;
+        height: $input-number-slider-height;
+        overflow-y: hidden;
+        display: flex;
+        align-items: center;
+    }
+
+    &__options {
+        @include hide-scroll-bar;
+        @include list-reset;
+        display: flex;
+        max-width: 158px;
+    }
+
+    &__option {
+        border: 1px solid $input-number-slider-color;
+        width: 30px;
+        min-width: 30px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 100%;
+        margin-right: $input-number-slider-options-spacing;
+        cursor: pointer;
+        color: $input-number-slider-color;
+
+        &.is-active {
+            color: $input-number-slider-color-active;
+            border-color: $input-number-slider-color-active;
+        }
+
+        &--placeholder {
+            border-color: rgba($input-number-slider-color, .25);
+        }
+    }
+
+    &__control {
+        cursor: pointer;
+        padding: 0 10px;
+        &:hover {
+            color: darken($color: #fff, $amount: 20%);
+        }
+    }
+
+    /// Modifiers
+    /// - js scroll
+    /// - css snap scroll
+    /// Use js scroll as fallback
+    &--js-scroll {
+        #{$component}__slider {
+            overflow-x: hidden;
+        }
+
+        #{$component}__options {
+            position: absolute;
+            left: 0;
+            transition: left 200ms ease-in-out;
+        }
+    }
+
+    // Test as viable option via scss
+    // https://css-tricks.com/practical-css-scroll-snapping/
+    &--scroll-snap {
+        #{$component}__slider {
+            display: flex;
+            align-items: center;
+        }
+
+        #{$component}__options {
+            scroll-snap-align: start;
+            overflow-x: scroll;
+            scroll-snap-type: x mandatory;
+            width: 100%;
+        }
+
+        #{$component}__option {
+            scroll-snap-align: start;
+        }
+    }
+}
