@@ -2,6 +2,9 @@ const has = require('lodash/has');
 const GameInstanceState = require('./instance/instanceState');
 const logger = require('../logger');
 
+/**
+ * This state sould probably be reactive
+ */
 module.exports = {
   memory: {
     games: {},

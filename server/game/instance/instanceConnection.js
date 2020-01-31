@@ -80,7 +80,7 @@ module.exports = ConnectionClass => class extends ConnectionClass {
 
     logger.debug(this.events.updatePlayerTurn);
     this.emitToAllInGame(this.events.startGame);
-    const currentPlayerTurn = this.gameInstance.getPlayerTurn();
+    const currentPlayerTurn = this.gameInstance.playerTurn;
     this.emitToAllInGame(this.events.updatePlayerTurn, currentPlayerTurn);
     logger.debug(currentPlayerTurn);
   }
@@ -117,7 +117,7 @@ module.exports = ConnectionClass => class extends ConnectionClass {
       return;
     }
 
-    this.gameInstance.filterConnections(Object.keys(connectionsInGame));
+    this.gameInstance.removeInactivePlayers(Object.keys(connectionsInGame));
     logger.silly(`${this.events.getGameDetails} %0`, this.gameInstance);
     this.emitToAllInGame(this.events.gameDetails, this.gameInstance);
   }
@@ -266,7 +266,7 @@ module.exports = ConnectionClass => class extends ConnectionClass {
    */
   territoryClicked(territoryName) {
     logger.debug(this.events.territoryClicked);
-    const playersTurn = this.gameInstance.getPlayerTurn();
+    const playersTurn = this.gameInstance.playerTurn;
     const isClickedPlayersTurn = this.gameInstance.isPlayersTurn(this.playerID);
 
     if (!isClickedPlayersTurn) {

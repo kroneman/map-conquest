@@ -92,7 +92,7 @@ class GameInstanceState {
     }
 
     while (!this.isInitialPlacementFinished) {
-      const playersTurn = this.getPlayerTurn();
+      const playersTurn = this.playerTurn;
       const randomTerritory = this.getRandomPlayerTerritory(playersTurn.id);
       this.reinforceTerritory(randomTerritory, playersTurn);
       this.updatePlayersTurn();
