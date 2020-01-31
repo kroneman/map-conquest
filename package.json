@@ -18,7 +18,7 @@
     "bot:dev": "nodemon ./bots/bot.js --config ./nodemon.bots.json",
     "bot-challenger:dev": "nodemon ./bots/challenger.js --config ./nodemon.bots.json",
     "territory-graph": "nodemon ./tools/graph/territoryGraph.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --recursive ./**/*.test.js"
   },
   "author": "Lennart Kroneman",
   "license": "ISC",
@@ -48,6 +48,7 @@
     "@babel/preset-env": "^7.5.5",
     "@babel/runtime": "^7.5.5",
     "babel-loader": "^8.0.6",
+    "chai": "^4.2.0",
     "copy-webpack-plugin": "^5.1.1",
     "core-js": "^3.1.4",
     "css-loader": "^2.1.1",
@@ -60,6 +61,7 @@
     "file-loader": "^4.0.0",
     "husky": "^3.0.3",
     "lint-staged": "^9.2.1",
+    "mocha": "^7.0.1",
     "node-sass": "^4.12.0",
     "nodemon": "^1.19.1",
     "sass-loader": "^7.1.0",
