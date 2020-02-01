@@ -66,7 +66,7 @@ describe('Server Player State Mixin', () => {
     StateInstance.removeInactivePlayers([]);
 
     StateInstance.addPlayer(createDummyPlayer({ id: 'duplicateID' }));
-    StateInstance.removePlayer({ id: 'duplicateID' });
+    StateInstance.removePlayer('duplicateID');
 
     expect(StateInstance).to.deep.include({
       players: []
@@ -151,7 +151,7 @@ describe('Server Player State Mixin', () => {
     const updatedColor = originalColorOptions.filter(colors => colors !== originalColorOptions[0]);
     expect(StateInstance.colorOptions).to.deep.equal(updatedColor);
 
-    StateInstance.removePlayer(firstPlayer);
+    StateInstance.removePlayer(firstPlayer.id);
     expect(StateInstance.colorOptions).to.deep.equal(originalColorOptions);
   });
 });

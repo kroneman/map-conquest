@@ -30,7 +30,8 @@ module.exports = GameInstanceState => class extends GameInstanceState {
   }
 
   /**
-   * Reactive Getters properties
+   * playerTurn based on playerTurnIndex
+   * @returns {null|object}
    */
   get playerTurn() {
     if (!isArray(this.players) || this.players.length < 1) {
@@ -40,14 +41,17 @@ module.exports = GameInstanceState => class extends GameInstanceState {
     return this.players[this.playerTurnIndex];
   }
 
+  /**
+   * @returns {boolean}
+   */
   get hasPlayers() {
     return this.players.length > 0;
   }
 
   /**
    * Adds a player to a game's state
-   * @param {Object} player -
-   * @returns {Boolean} success or failure of operation
+   * @param {object} player -
+   * @returns {boolean} success or failure of operation
    */
   addPlayer(player) {
     const isAlreadyPlayer = filter(this.players, ({ id }) => id === player.id).length > 0;
@@ -70,11 +74,17 @@ module.exports = GameInstanceState => class extends GameInstanceState {
   }
 
   /**
-   * @param {Object} player -
-   * @returns {Boolean} success or failure of operation
+   * @param {object} player -
+   * @returns {boolean} success or failure of operation
    */
-  removePlayer(player) {
-    const filteredPlayers = filter(this.players, ({ id }) => id !== player.id);
+  removePlayer(id) {
+    if (!isString(id)) {
+      // eslint-disable-next-line no-console
+      console.warn('removePlayer: id must be a string');
+      return false;
+    }
+
+    const filteredPlayers = filter(this.players, player => id !== player.id);
     if (filteredPlayers.length === this.players.length) {
       return false;
     }
@@ -87,32 +97,32 @@ module.exports = GameInstanceState => class extends GameInstanceState {
   }
 
   /**
-   * @param {String} playerID
-   * @returns {Object} player
+   * @param {String} id
+   * @returns {object} player
    */
-  getPlayer(playerID) {
-    if (!isString(playerID)) {
+  getPlayer(id) {
+    if (!isString(id)) {
       // Not sure if i like empty objects
       return {};
     }
 
-    return find(this.players, player => player.id === playerID);
+    return find(this.players, player => player.id === id);
   }
 
   /**
    * Update a player in the list
-   * @param {string} playerID
+   * @param {string} id
    * @param {string} playerData
    * @returns {boolean} success or failure to update
    */
-  updatePlayer(playerID, playerData) {
+  updatePlayer(id, playerData) {
     let isSuccess = false;
     if (this.players.length < 1) {
       return isSuccess;
     }
 
     const updatedPlayers = map(this.players, (player) => {
-      if (player.id !== playerID) {
+      if (player.id !== id) {
         return player;
       }
 
@@ -131,6 +141,7 @@ module.exports = GameInstanceState => class extends GameInstanceState {
   /**
    * Pass an array of active players and filter the other ones out
    * @param {Array<string>} activePlayers
+   * @returns {boolean}
    */
   removeInactivePlayers(activePlayers = []) {
     if (!activePlayers || !isArray(activePlayers)) {
@@ -147,18 +158,17 @@ module.exports = GameInstanceState => class extends GameInstanceState {
 
   /**
    * Check's if it's the turn of the playerID passed
-   * @param {*} playerID
+   * @param {string} id
    * @returns {boolean}
    */
-  isPlayersTurn(playerID) {
+  isPlayersTurn(id) {
     const { playerTurn } = this;
-    return Boolean(playerTurn) && playerID === playerTurn.id;
+    return Boolean(playerTurn) && id === playerTurn.id;
   }
 
   /**
    * Checks the ID of a passed player to see if they are a member of the current game
-   * @FIXME: onlyRequire ID
-   * @param {*} player
+   * @param {string} id of the player to remove
    * @returns {boolean}
    */
   isPlayer(id) {
@@ -167,7 +177,7 @@ module.exports = GameInstanceState => class extends GameInstanceState {
 
   /**
    * Updates the currently active players's turn
-   * @returns {object} object of the current players turn
+   * @returns {object} of the current player's turn
    */
   updatePlayersTurn() {
     if (this.playerTurnIndex === (this.players.length - 1)) {
