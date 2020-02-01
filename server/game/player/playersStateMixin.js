@@ -23,7 +23,7 @@ module.exports = GameInstanceState => class extends GameInstanceState {
         const takenColors = map(this.players, player => player.color);
         return filter(originalColorOptions, color => !takenColors.includes(color));
       },
-      // defineProperty to make this enumerable
+      // defineProperty to make this getter enumerable
       enumerable: true,
       configurable: true
     });
@@ -161,7 +161,7 @@ module.exports = GameInstanceState => class extends GameInstanceState {
    * @param {*} player
    * @returns {boolean}
    */
-  isPlayer({ id }) {
+  isPlayer(id) {
     return filter(this.players, player => id === player.id).length > 0;
   }
 

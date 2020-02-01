@@ -96,12 +96,12 @@ describe('Server Player State Mixin', () => {
   it('StateInstance.isPlayer():', () => {
     StateInstance.removeInactivePlayers([]);
 
-    const isPlayer = StateInstance.isPlayer({ id: 'nonExistentPlayer' });
+    const isPlayer = StateInstance.isPlayer('nonExistentPlayer');
     expect(isPlayer).to.equal(false);
 
     StateInstance.addPlayer(createDummyPlayer({ id: 'nonExistentPlayer' }));
 
-    const isNowAPlayer = StateInstance.isPlayer({ id: 'nonExistentPlayer' });
+    const isNowAPlayer = StateInstance.isPlayer('nonExistentPlayer');
     expect(isNowAPlayer).to.equal(true);
   });
 
