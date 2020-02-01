@@ -88,7 +88,7 @@ class Game extends ConnectionClass {
     };
 
     const gameInstance = gameState.getGameInstance(this.gameID);
-    const isGamePlayer = gameInstance.isGamePlayer(memberToRemove);
+    const isGamePlayer = gameInstance.isPlayer(memberToRemove);
     if (isGamePlayer) {
       gameInstance.removePlayer(memberToRemove);
     }

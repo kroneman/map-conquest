@@ -27,7 +27,6 @@ module.exports = ConnectionClass => class extends ConnectionClass {
 
     const gameInstance = gameState.getGameInstance(gameID);
     gameInstance.updatePlayer(this.playerID, playerData);
-    gameInstance.updateColorOptions();
     this.io.in(gameID).emit(this.events.gameDetails, gameInstance);
   }
 };

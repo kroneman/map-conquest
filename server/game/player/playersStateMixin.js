@@ -1,5 +1,6 @@
 const filter = require('lodash/filter');
 const isArray = require('lodash/isArray');
+const isString = require('lodash/isString');
 const map = require('lodash/map');
 const find = require('lodash/find');
 
@@ -16,9 +17,21 @@ module.exports = GameInstanceState => class extends GameInstanceState {
     super(props);
     this.players = [];
     this.playerTurnIndex = 0;
-    this.colorOptions = originalColorOptions;
+
+    Object.defineProperty(this, 'colorOptions', {
+      get() {
+        const takenColors = map(this.players, player => player.color);
+        return filter(originalColorOptions, color => !takenColors.includes(color));
+      },
+      // defineProperty to make this enumerable
+      enumerable: true,
+      configurable: true
+    });
   }
 
+  /**
+   * Reactive Getters properties
+   */
   get playerTurn() {
     if (!isArray(this.players) || this.players.length < 1) {
       return null;
@@ -45,6 +58,7 @@ module.exports = GameInstanceState => class extends GameInstanceState {
     // the more players the less reinforcements
     const playerWithArmies = {
       ...player,
+      // !!!!!!!!!!!! refactor this part with the armies
       reinforcements: 40
     };
 
@@ -56,7 +70,6 @@ module.exports = GameInstanceState => class extends GameInstanceState {
   }
 
   /**
-   * Removes a player from the games state
    * @param {Object} player -
    * @returns {Boolean} success or failure of operation
    */
@@ -73,24 +86,52 @@ module.exports = GameInstanceState => class extends GameInstanceState {
     return true;
   }
 
+  /**
+   * @param {String} playerID
+   * @returns {Object} player
+   */
   getPlayer(playerID) {
+    if (!isString(playerID)) {
+      // Not sure if i like empty objects
+      return {};
+    }
+
     return find(this.players, player => player.id === playerID);
   }
 
+  /**
+   * Update a player in the list
+   * @param {string} playerID
+   * @param {string} playerData
+   * @returns {boolean} success or failure to update
+   */
   updatePlayer(playerID, playerData) {
+    let isSuccess = false;
+    if (this.players.length < 1) {
+      return isSuccess;
+    }
+
     const updatedPlayers = map(this.players, (player) => {
       if (player.id !== playerID) {
         return player;
       }
 
+      // Mark operation successful
+      isSuccess = true;
       return {
         ...player,
         ...playerData
       };
     });
+
     this.players = updatedPlayers;
+    return isSuccess;
   }
 
+  /**
+   * Pass an array of active players and filter the other ones out
+   * @param {Array<string>} activePlayers
+   */
   removeInactivePlayers(activePlayers = []) {
     if (!activePlayers || !isArray(activePlayers)) {
       return false;
@@ -104,15 +145,30 @@ module.exports = GameInstanceState => class extends GameInstanceState {
     return true;
   }
 
+  /**
+   * Check's if it's the turn of the playerID passed
+   * @param {*} playerID
+   * @returns {boolean}
+   */
   isPlayersTurn(playerID) {
     const { playerTurn } = this;
     return Boolean(playerTurn) && playerID === playerTurn.id;
   }
 
-  isGamePlayer({ id }) {
+  /**
+   * Checks the ID of a passed player to see if they are a member of the current game
+   * @FIXME: onlyRequire ID
+   * @param {*} player
+   * @returns {boolean}
+   */
+  isPlayer({ id }) {
     return filter(this.players, player => id === player.id).length > 0;
   }
 
+  /**
+   * Updates the currently active players's turn
+   * @returns {object} object of the current players turn
+   */
   updatePlayersTurn() {
     if (this.playerTurnIndex === (this.players.length - 1)) {
       this.playerTurnIndex = 0;
@@ -121,11 +177,5 @@ module.exports = GameInstanceState => class extends GameInstanceState {
 
     this.playerTurnIndex += 1;
     return this.playerTurn;
-  }
-
-  updateColorOptions() {
-    const takenColors = map(this.players, player => player.color);
-    const availableColors = filter(originalColorOptions, color => !takenColors.includes(color));
-    this.colorOptions = availableColors;
   }
 };

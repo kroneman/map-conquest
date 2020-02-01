@@ -129,7 +129,7 @@ class GameInstanceState {
     }
 
     this.availableTerritories.map((territoryId) => {
-      const playersTurn = this.getPlayerTurn();
+      const playersTurn = this.playerTurn;
 
       this.claimTerritory(territoryId, playersTurn);
       return this.updatePlayersTurn();

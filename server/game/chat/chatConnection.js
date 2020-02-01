@@ -27,7 +27,7 @@ module.exports = ConnectionClass => class extends ConnectionClass {
     }
 
     const gameInstance = gameState.getGameInstance(gameID);
-    const isPlayer = gameInstance.isGamePlayer(this.playerID);
+    const isPlayer = gameInstance.isPlayer(this.playerID);
     const method = isPlayer ? 'getPlayer' : 'getSpectator';
     const player = gameInstance[method](this.playerID);
 
