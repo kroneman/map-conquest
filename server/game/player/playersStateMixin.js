@@ -49,6 +49,15 @@ module.exports = GameInstanceState => class extends GameInstanceState {
   }
 
   /**
+   * Checks the ID of a passed player to see if they are a member of the current game
+   * @param {string} id of the player to remove
+   * @returns {boolean}
+   */
+  isPlayer(id) {
+    return filter(this.players, player => id === player.id).length > 0;
+  }
+
+  /**
    * Adds a player to a game's state
    * @param {object} player -
    * @returns {boolean} success or failure of operation
@@ -164,15 +173,6 @@ module.exports = GameInstanceState => class extends GameInstanceState {
   isPlayersTurn(id) {
     const { playerTurn } = this;
     return Boolean(playerTurn) && id === playerTurn.id;
-  }
-
-  /**
-   * Checks the ID of a passed player to see if they are a member of the current game
-   * @param {string} id of the player to remove
-   * @returns {boolean}
-   */
-  isPlayer(id) {
-    return filter(this.players, player => id === player.id).length > 0;
   }
 
   /**

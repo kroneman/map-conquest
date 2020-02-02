@@ -32,8 +32,13 @@ module.exports = GameInstanceState => class extends GameInstanceState {
     return Object.keys(this.territories);
   }
 
+  /**
+   * @param {string} territoryID
+   * @returns {null|object}
+   */
   getTerritory(territoryID) {
     if (!has(this.territories, territoryID)) {
+      logger.warn('getTerritory: territory \'%s\', does not exist', territoryID);
       return null;
     }
 
