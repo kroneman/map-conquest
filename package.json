@@ -18,7 +18,7 @@
     "bot:dev": "nodemon ./bots/bot.js --config ./nodemon.bots.json",
     "bot-challenger:dev": "nodemon ./bots/challenger.js --config ./nodemon.bots.json",
     "territory-graph": "nodemon ./tools/graph/territoryGraph.js",
-    "test": "mocha --recursive ./**/*.test.js"
+    "test": "mocha --recursive ./server/**/*.test.js"
   },
   "author": "Lennart Kroneman",
   "license": "ISC",
@@ -73,7 +73,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged && npm test"
     }
   },
   "lint-staged": {

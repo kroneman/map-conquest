@@ -1,5 +1,7 @@
 const has = require('lodash/has');
 const reduce = require('lodash/reduce');
+const isString = require('lodash/isString');
+
 const logger = require('../../logger');
 const gameState = require('../state');
 const { territoryDiceRoll } = require('../helpers/dice');
@@ -157,8 +159,6 @@ module.exports = ConnectionClass => class extends ConnectionClass {
   turnAttackTerritory({ attackerID, defenderID }) {
     logger.debug(this.events.turnAttackTerritory);
     if (!this.isValidAttack({ attackerID, defenderID })) {
-      // make sure they have an updated list of his own territories
-      this.gameInstance.updateContinentOwnership();
       this.emitToAllInGame(this.events.gameDetails, this.gameInstance);
       return;
     }
@@ -265,6 +265,11 @@ module.exports = ConnectionClass => class extends ConnectionClass {
    * @returns {void}
    */
   territoryClicked(territoryName) {
+    if (!isString(territoryName)) {
+      logger.warn('territoryClicked %s: is not a valid string', territoryName);
+      return;
+    }
+
     logger.debug(this.events.territoryClicked);
     const playersTurn = this.gameInstance.playerTurn;
     const isClickedPlayersTurn = this.gameInstance.isPlayersTurn(this.playerID);
@@ -275,20 +280,20 @@ module.exports = ConnectionClass => class extends ConnectionClass {
       return;
     }
 
-    const areTerritoriesAvailable = this.gameInstance.areTerritoriesAvailable();
+    const { territoriesAreAvailable } = this.gameInstance;
     const isVictoryAchieved = this.gameInstance.victoryCondition(this.playerID);
     const isPlacementPhaseDone = !isVictoryAchieved
       && this.gameInstance.checkInitialPlacementPhase();
     const state = {
       isPlacementPhaseDone,
-      areTerritoriesAvailable,
-      isReinforceSingleTerritory: !(isPlacementPhaseDone || areTerritoriesAvailable),
+      territoriesAreAvailable,
+      isReinforceSingleTerritory: !(isPlacementPhaseDone || territoriesAreAvailable),
       isVictoryAchieved
     };
 
     const actions = {
       isPlacementPhaseDone: () => this.turnDraftReinforcements(territoryName),
-      areTerritoriesAvailable: () => this.claimTerritory(territoryName),
+      territoriesAreAvailable: () => this.claimTerritory(territoryName),
       isReinforceSingleTerritory: () => this.reinforceSingleTerritory(territoryName),
       isVictoryAchieved: () => { logger.info(`${this.playerID}: has won the game!`); },
       noop: () => { logger.info('noop'); }
