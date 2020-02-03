@@ -7,18 +7,33 @@ module.exports = GameInstanceState => class extends GameInstanceState {
     this.spectators = [];
   }
 
+  /**
+   * @returns {boolean}
+   */
+  get hasSpectators() {
+    return this.spectators.length > 0;
+  }
+
+  /**
+   * @param {object} player
+   * @returns {boolean}
+   */
   addSpectator(player) {
-    const isAlreadySpectator = this.isGameSpectator(player);
+    const isAlreadySpectator = this.isSpectator(player.id);
     if (isAlreadySpectator) {
-      return;
+      return false;
     }
 
     this.spectators = [
       ...this.spectators,
       player
     ];
+    return true;
   }
 
+  /**
+   * @param {object} player
+   */
   removeSpectator(player) {
     const filteredSpectators = filter(this.spectators, ({ id }) => id !== player.id);
     this.spectators = [
@@ -26,15 +41,26 @@ module.exports = GameInstanceState => class extends GameInstanceState {
     ];
   }
 
-  getSpectator(playerID) {
-    return find(this.spectators, ({ id }) => id === playerID);
+  /**
+   * @param {string} id
+   * @returns {object}
+   */
+  getSpectator(id) {
+    return find(this.spectators, spectator => id === spectator.id);
   }
 
-  isGameSpectator({ id }) {
-    return filter(this.spectators, spectator => id === spectator.id).length > 0;
+  /**
+   * @param {string} id
+   * @returns {boolean}
+   */
+  isSpectator(id) {
+    return filter(this.spectators, spectator => spectator.id === id).length > 0;
   }
 
-  hasSpectators() {
-    return this.spectators.length > 0;
+  /**
+   * @returns {void}
+   */
+  removeAllSpectators() {
+    this.spectators = [];
   }
 };
