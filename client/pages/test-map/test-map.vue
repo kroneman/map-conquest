@@ -7,6 +7,10 @@
           :animated-map="isAnimatedMap"
         />
       </div>
+      <InputNumberSlider
+        :min="4"
+        :max="10"
+      />
     </div>
   </page>
 </template>
@@ -14,11 +18,12 @@
 <script>
 import page from '../../components/page/page.vue';
 import gameMap from '../../components/map/map.generated.vue';
+import InputNumberSlider from '../../components/input-number-slider/input-number-slider.vue';
 
 export default {
   name: 'GameSession',
   components: {
-    page, gameMap
+    page, gameMap, InputNumberSlider
   },
   data: () => ({
     isTestMap: true,

@@ -1,8 +1,7 @@
 const has = require('lodash/has');
 const filter = require('lodash/filter');
-const map = require('lodash/map');
 const sample = require('lodash/sample');
-const uniqBy = require('lodash/uniqBy');
+// const uniqBy = require('lodash/uniqBy');
 const findIndex = require('lodash/findIndex');
 const difference = require('lodash/difference');
 const logger = require('../../logger');
@@ -24,72 +23,93 @@ module.exports = GameInstanceState => class extends GameInstanceState {
     super(props);
 
     this.territories = {};
-    this.territoryMap = {};
-    this.availableTerritories = originalTerritoryList;
+    this.continents = territoryListByContinent;
+
+    Object.defineProperty(this, 'availableTerritories', {
+      get() {
+        const taken = Object.keys(this.territories);
+        return filter(
+          originalTerritoryList,
+          territory => !taken.includes(territory)
+        );
+      },
+      enumerable: true,
+      configurable: true
+    });
+
+    Object.defineProperty(this, 'territoryMap', {
+      get() {
+        const newTerritoryMap = {};
+        Object.keys(this.territories).forEach((territoryKey) => {
+          const { playerID } = this.territories[territoryKey];
+
+          if (!has(newTerritoryMap, playerID)) {
+            newTerritoryMap[playerID] = [];
+          }
+
+          newTerritoryMap[playerID].push(territoryKey);
+        });
+        return newTerritoryMap;
+      },
+      enumerable: true,
+      configurable: true
+    });
+
+    Object.defineProperty(this, 'continentOwnership', {
+      enumerable: true,
+      configurable: true,
+      get() {
+        const continentOwnership = {};
+        Object.keys(this.territoryMap).forEach((playerID) => {
+          const continentsOwned = [];
+          const playerTerritories = this.getPlayerTerritories(playerID);
+          const continentKeys = Object.keys(territoryListByContinent);
+          let lenContinentKeys = continentKeys.length;
+          while (lenContinentKeys) {
+            lenContinentKeys -= 1;
+            const currentContinentKey = continentKeys[lenContinentKeys];
+            const currentContinentTerritories = territoryListByContinent[currentContinentKey];
+            const differenceBetween = difference(currentContinentTerritories, playerTerritories);
+            const noDifference = differenceBetween.length < 1;
+            if (noDifference) {
+              continentsOwned.push(currentContinentKey);
+            }
+          }
+
+          continentOwnership[playerID] = continentsOwned;
+        });
+
+        return continentOwnership;
+      }
+    });
   }
 
+  /**
+   * @returns {array<string>} territories claimed by players
+   */
   get allTerritories() {
     return Object.keys(this.territories);
   }
 
-  getTerritory(territoryID) {
-    if (!has(this.territories, territoryID)) {
-      return null;
-    }
-
-    return this.territories[territoryID];
-  }
-
-  isPlayersTerritory(territoryID, player) {
-    const territory = this.getTerritory(territoryID);
-    logger.debug('isPlayersTerritory: %o', territory);
-    return territory && territory.claimedBy === player.id;
-  }
-
-  areTerritoriesAvailable() {
+  /**
+   * @returns {boolean}
+   */
+  get territoriesAreAvailable() {
     return this.availableTerritories.length > 0;
   }
 
-  updateAvailableTerritories() {
-    const takenTerritories = Object.keys(this.territories);
-    this.availableTerritories = filter(
-      originalTerritoryList,
-      territory => !takenTerritories.includes(territory)
-    );
+  /**
+   * Resets territory object
+   */
+  resetTerritories() {
+    this.territories = {};
   }
 
-  updateTerritoryMap() {
-    map(this.players, ({ id }) => {
-      this.getPlayerTerritories(id);
-    });
-  }
-
-  getPlayerTerritories(playerID) {
-    // reset territorymap so old values don't persist
-    this.territoryMap[playerID] = [];
-    map(this.territories, (value, prop) => {
-      if (playerID === value.claimedBy) {
-        this.territoryMap[playerID].push(prop);
-        this.territoryMap[playerID] = uniqBy(this.territoryMap[playerID], v => v);
-      }
-    });
-
-    return this.territoryMap[playerID];
-  }
-
-  getRandomPlayerTerritory(playerID) {
-    const playerTerritories = this.getPlayerTerritories(playerID);
-    return sample(playerTerritories);
-  }
-
-  territoryLosesArmies(territoryID, armiesLost = 1) {
-    if (armiesLost > this.territories[territoryID].armies) {
-      throw new Error('Territory cant go into negative armies');
-    }
-
-    this.territories[territoryID].armies -= armiesLost;
-  }
-
+  /**
+   * @param {string} territoryID
+   * @param {object} player
+   * @returns {object} success and [message]
+   */
   claimTerritory(territoryID, player) {
     if (has(this.territories, territoryID)) {
       return {
@@ -107,16 +127,72 @@ module.exports = GameInstanceState => class extends GameInstanceState {
 
     this.territories[territoryID] = {
       color: player.color,
-      claimedBy: player.id,
+      playerID: player.id,
       armies: 1
     };
-    this.updateAvailableTerritories();
-    this.updateTerritoryMap();
     return {
       success: true
     };
   }
 
+  /**
+   * @param {string} territoryID
+   * @returns {null|object}
+   */
+  getTerritory(territoryID) {
+    if (!has(this.territories, territoryID)) {
+      logger.warn('getTerritory: territory \'%s\', does not exist', territoryID);
+      return null;
+    }
+
+    return this.territories[territoryID];
+  }
+
+  /**
+   * @param {string} territoryID to check
+   * @param {object} player @todo refactor this to accept ID only
+   * @returns {boolean}
+   */
+  isPlayersTerritory(territoryID, player) {
+    const territory = this.getTerritory(territoryID);
+    logger.debug('isPlayersTerritory: %o', territory);
+    return territory && territory.playerID === player.id;
+  }
+
+  /**
+   * @param {string} playerID
+   * @returns {array<string>}
+   */
+  getPlayerTerritories(playerID) {
+    return this.territoryMap[playerID];
+  }
+
+  /**
+   * @param {string} playerID
+   * @returns {object} territory
+   */
+  getRandomPlayerTerritory(playerID) {
+    const playerTerritories = this.getPlayerTerritories(playerID);
+    return sample(playerTerritories);
+  }
+
+  /**
+   * @param {string} territoryID
+   * @param {number} armiesLost
+   * @returns {void}
+   */
+  territoryLosesArmies(territoryID, armiesLost = 1) {
+    if (armiesLost > this.territories[territoryID].armies) {
+      throw new Error('Territory cant go into negative armies');
+    }
+
+    this.territories[territoryID].armies -= armiesLost;
+  }
+
+  /**
+   * @param {string} territoryID
+   * @returns {boolean} success and message props
+   */
   clearTerritoryClaim(territoryID) {
     if (!has(this.territories, territoryID)) {
       return {
@@ -135,25 +211,36 @@ module.exports = GameInstanceState => class extends GameInstanceState {
     };
   }
 
+  /**
+   * @param {stirng} territoryID
+   * @param {string} playerID
+   * @param {number} armies
+   */
   takeOverTerritory(territoryID, playerID, armies) {
     const isTerritory = has(this.territories, territoryID);
+    // think about removing player, dependency makes it difficult to test
     const player = this.getPlayer(playerID);
     const territory = isTerritory ? this.territories[territoryID] : false;
     const isEmpty = territory && territory.armies === 0;
     if (!isEmpty) {
-      return;
+      return false;
     }
 
     this.territories[territoryID] = {
       color: player.color,
-      claimedBy: player.id,
+      playerID: player.id,
       armies
     };
 
-    this.updateTerritoryMap();
     this.checkContinentOwnership(player.id);
+    return true;
   }
 
+  /**
+   * @param {string} territoryID
+   * @param {object} player
+   * @returns {object}
+   */
   reinforceTerritory(territoryID, player) {
     const isPlayersTerritory = this.isPlayersTerritory(territoryID, player);
     if (!isPlayersTerritory) {
@@ -162,6 +249,8 @@ module.exports = GameInstanceState => class extends GameInstanceState {
         message: messages.cantReinforceTerritoryPlayerDoesntOwn(territoryID)
       };
     }
+
+    // same here, see if it's possible to remove the player
     const playerIndexToUpdate = findIndex(this.players, ({ id }) => id === player.id);
     const reinforceBy = 1;
 
@@ -172,6 +261,10 @@ module.exports = GameInstanceState => class extends GameInstanceState {
     };
   }
 
+  /**
+   * @param {object} player
+   * @param {{ reinforceFrom: string, reinforceTo: string, amount: number }} reinforceConfig
+   */
   reinforceTerritoryFromAnother(player, reinforceConfig) {
     const { reinforceFrom, reinforceTo, amount } = reinforceConfig;
     const playerOwnsTerritories = [reinforceFrom, reinforceTo].every(
@@ -197,35 +290,12 @@ module.exports = GameInstanceState => class extends GameInstanceState {
 
     this.territories[reinforceFrom].armies -= amount;
     this.territories[reinforceTo].armies += amount;
-
-    this.updateTerritoryMap();
-    this.updateContinentOwnership();
     return {
       success: true
     };
   }
 
-  updateContinentOwnership() {
-    map(this.players, this.checkContinentOwnership.bind(this));
-  }
-
   checkContinentOwnership(player) {
-    const continentsOwned = [];
-    const playerTerritories = this.getPlayerTerritories(player.id);
-
-    const continentKeys = Object.keys(territoryListByContinent);
-    let lenContinentKeys = continentKeys.length;
-    while (lenContinentKeys) {
-      lenContinentKeys -= 1;
-      const currentContinentKey = continentKeys[lenContinentKeys];
-      const currentContinentTerritories = territoryListByContinent[currentContinentKey];
-      const differenceBetween = difference(currentContinentTerritories, playerTerritories);
-      const noDifference = differenceBetween.length < 1;
-      if (noDifference) {
-        continentsOwned.push(currentContinentKey);
-      }
-    }
-
-    return continentsOwned;
+    return this.continentOwnership[player.id];
   }
 };

@@ -88,9 +88,9 @@ class Game extends ConnectionClass {
     };
 
     const gameInstance = gameState.getGameInstance(this.gameID);
-    const isGamePlayer = gameInstance.isGamePlayer(memberToRemove);
+    const isGamePlayer = gameInstance.isPlayer(memberToRemove.id);
     if (isGamePlayer) {
-      gameInstance.removePlayer(memberToRemove);
+      gameInstance.removePlayer(memberToRemove.id);
     }
 
     const isGameSpectator = gameInstance.isGameSpectator(memberToRemove);
@@ -99,14 +99,14 @@ class Game extends ConnectionClass {
     }
 
     const stillHasSpectators = gameInstance.hasSpectators();
-    const stillHasPlayers = gameInstance.hasPlayers();
+    const stillHasPlayers = gameInstance.hasPlayers;
     if (!stillHasSpectators && !stillHasPlayers) {
       gameState.deleteGameInstance(this.gameID);
     }
 
     const gameRoom = this.rooms[this.gameID];
     const connectionsInGame = gameRoom && gameRoom.sockets ? gameRoom.sockets : [];
-    gameInstance.filterConnections(Object.keys(connectionsInGame));
+    gameInstance.removeInactivePlayers(Object.keys(connectionsInGame));
 
     this.socket.to(this.gameID).emit(this.events.gameDetails, gameInstance);
     this.removeConnectionFromRoom(this.gameID);

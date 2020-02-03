@@ -2,13 +2,14 @@ const has = require('lodash/has');
 const GameInstanceState = require('./instance/instanceState');
 const logger = require('../logger');
 
-class State {
-  constructor() {
-    this.memory = {
-      games: {},
-      assignedToRoom: {}
-    };
-  }
+/**
+ * This state sould probably be reactive
+ */
+module.exports = {
+  memory: {
+    games: {},
+    assignedToRoom: {}
+  },
 
   /**
    * Retrieves from memory if already instantiated in current session
@@ -32,7 +33,7 @@ class State {
     });
 
     return this.memory.games[gameID];
-  }
+  },
 
   /**
    * Deletes a game from memory, when a name/room is unique
@@ -51,7 +52,7 @@ class State {
     }
 
     return null;
-  }
+  },
 
   /**
    * When joining a room adding it to own memory as well
@@ -66,7 +67,7 @@ class State {
     }
 
     this.memory.assignedToRoom[socketID] = gameID;
-  }
+  },
 
   /**
    * When joining a room adding it to own memory as well
@@ -86,7 +87,7 @@ class State {
     }
 
     logger.debug('%o', this.memory);
-  }
+  },
 
   /**
    * Retrieves room assignment for a socket id
@@ -101,6 +102,4 @@ class State {
     return has(this.memory.assignedToRoom, socketID)
       ? this.memory.assignedToRoom[socketID] : null;
   }
-}
-
-module.exports = new State();
+};

@@ -71,7 +71,7 @@ module.exports = class Connection {
 
     const gameRoom = this.rooms[gameID];
     const connectionsInGame = gameRoom && gameRoom.sockets ? gameRoom.sockets : [];
-    gameInstance.filterConnections(Object.keys(connectionsInGame));
+    gameInstance.removeInactivePlayers(Object.keys(connectionsInGame));
 
     this.socket.to(gameID).emit(this.events.gameDetails, gameInstance);
   }
