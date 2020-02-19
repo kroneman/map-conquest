@@ -16,8 +16,8 @@ const {
 
 module.exports = SuperClass => class extends SuperClass {
   /**
-   * Overides default BaseBot turnReinforcements
-   * Therefore logging ContinentBasedAttack for clarification
+   * Overrides default BaseBot turnReinforcements
+   * When overriding
    * @param {Object} gameDetails instance state of current game
    */
   turnReinforcements({ territoryMap, territories }, { reinforcements }) {
@@ -40,7 +40,7 @@ module.exports = SuperClass => class extends SuperClass {
   }
 
   /**
-   * Overides default BaseBot turnAttack
+   * Overrides default BaseBot turnAttack
    * Therefore logging ContinentBasedAttack for clarification
    * @param {Object} gameDetails instance state of current game
    */
