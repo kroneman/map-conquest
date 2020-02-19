@@ -30,7 +30,7 @@ function ensureAllHaveContinent() {
   map(features, (feature) => {
     const { properties } = feature;
     // yes a typo unfortunately, need to fix this in mapbox studio
-    if (!properties.contintent) {
+    if (!properties.continent) {
       // eslint-disable-next-line no-console
       console.error(`${properties.province} has no assigned continent`);
       numUnassigned += 1;
@@ -70,9 +70,7 @@ function ensureAllHaveCanReachProperty() {
 }
 
 function countTerritories() {
-  // need to update mapbox to split ural and siberia
-  // const is42Territories = features.length === 42;
-  const is42Territories = features.length === 41;
+  const is42Territories = features.length === 42;
   // eslint-disable-next-line no-console
   console.log(is42Territories ? 'There are 42 territories' : `${features.length} found instead`);
   return is42Territories;

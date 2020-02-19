@@ -44,6 +44,10 @@ class GameInstanceState {
     this.isInitialPlacementFinished = false;
   }
 
+  /**
+   * Starts the game
+   * @returns {boolean} isGameStarted
+   */
   startGame() {
     const readyPlayers = filter(this.players, player => !!player.color);
     const lenPlayers = this.players.length;
@@ -59,6 +63,11 @@ class GameInstanceState {
     return false;
   }
 
+  /**
+   * After the game has started check if only one player is left to determine victory
+   * @param {string} playerID
+   * @returns {booelan}
+   */
   victoryCondition(playerID) {
     if (!this.isInitialPlacementFinished) {
       return false;
@@ -68,7 +77,11 @@ class GameInstanceState {
     return playersTerritories.length === this.allTerritories.length;
   }
 
-  // refactor this to be a getter;
+  /**
+   * See if the placement phase of the games is done
+   * @todo: refactor this to be a getter;?
+   * @returns {boolean}
+   */
   checkInitialPlacementPhase() {
     if (this.isInitialPlacementFinished) {
       return this.isInitialPlacementFinished;
@@ -100,6 +113,10 @@ class GameInstanceState {
     }
   }
 
+  /**
+   * Validates mode before setting it
+   * @param {string} mode to set
+   */
   setReinforcement(mode) {
     if (!this.reinforcementModeOptions.includes(mode)) {
       logger.error(messages.invalidReinforcementMode);
@@ -109,10 +126,17 @@ class GameInstanceState {
     this.reinforcementMode = mode;
   }
 
+  /**
+   * @param {string} mode
+   * @returns {boolean}
+   */
   isReinforcementMode(mode) {
     return this.reinforcementMode === mode;
   }
 
+  /**
+   * @returns {string}
+   */
   getReinforcementMode() {
     return this.reinforcementMode;
   }
@@ -136,6 +160,11 @@ class GameInstanceState {
     });
   }
 
+  /**
+   * Sets configuration of auto or manual placement
+   * @param {string} mode
+   * @returns {void}
+   */
   setPlacement(mode) {
     if (!this.placementModeOptions.includes(mode)) {
       logger.error(messages.invalidPlacementMode);
@@ -143,16 +172,22 @@ class GameInstanceState {
     }
 
     if (mode === 'manual') {
-      this.setReinforcementMode(mode);
+      this.setReinforcement(mode);
     }
 
     this.placementMode = mode;
   }
 
+  /**
+   * @param {boolean} mode
+   */
   isPlacementMode(mode) {
     return this.placementMode === mode;
   }
 
+  /**
+   * @returns {string}
+   */
   getPlacementMode() {
     return this.placementMode;
   }
