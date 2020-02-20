@@ -13,8 +13,9 @@
       <span class="reinforce-panel__amount">
         Amount:
         <input
-          v-model="amount"
+          :value="amount"
           type="text"
+          @keyup="onKeyUp($event)"
         >
         <game-button
           @click="confirmReinforcement"
@@ -27,14 +28,21 @@
 </template>
 
 <script>
+import debounce from 'lodash/debounce';
 import gameButton from '../../components/button/button.vue';
 
 export default {
   name: 'ReinforcePanel',
   components: { gameButton },
-  data: () => ({
-    amount: 1
-  }),
+  props: {
+    min: { type: Number, default: 0 },
+    max: { type: Number, default: 5 }
+  },
+  data() {
+    return {
+      amount: 0
+    };
+  },
   computed: {
     isShow() {
       return this.$store.state.game.showReinforceUI;
@@ -44,6 +52,40 @@ export default {
     }
   },
   methods: {
+    onKeyUp: debounce(function keyUp(e) {
+      e.preventDefault();
+      const { value } = e.target;
+      const currentValueString = (!value || value.length < 1) ? '0' : value;
+      this.validateBounds(currentValueString);
+    }, 100),
+    validateBounds(number) {
+      const parsedNumber = parseInt(number, 10);
+      const isNaN = Number.isNaN(parsedNumber);
+      if (isNaN) {
+        this.setAmmount(this.min);
+        return;
+      }
+
+      if (Math.min(parsedNumber, this.max) === this.max) {
+        this.setAmmount(this.max);
+        return;
+      }
+
+      if (Math.max(parsedNumber, this.min) === this.min) {
+        this.setAmmount(this.min);
+        return;
+      }
+
+      this.setAmmount(parsedNumber);
+    },
+    setAmmount(value) {
+      if (this.amount === value) {
+        this.$forceUpdate();
+        return;
+      }
+
+      this.amount = value;
+    },
     confirmReinforcement() {
       const reinforceConfig = {
         ...this.reinforceConfig,
