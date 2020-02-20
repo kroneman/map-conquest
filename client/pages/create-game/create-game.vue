@@ -63,18 +63,35 @@ export default {
     inputText,
     navigation
   },
-  data: () => ({
-    gameSetup: {
-      name: 'bot',
-      joinAsSpectator: true
-    }
-  }),
+  data() {
+    return {
+      gameSetup: {
+        name: 'bot',
+        joinAsSpectator: false
+      }
+    };
+  },
   computed: {
+    settings() {
+      return this.$store.state.game.settings;
+    },
     createGameError() {
       return this.$store.state.game.createGameError;
     },
     currentGame() {
       return this.$store.state.game.currentGame.id;
+    }
+  },
+  watch: {
+    settings(newValue, oldValue) {
+      if (newValue.createGameAsSpectator === oldValue.createGameAsSpectator) {
+        return;
+      }
+
+      this.gameSetup = {
+        ...this.gameSetup,
+        joinAsSpectator: newValue.createGameAsSpectator
+      };
     }
   },
   created() {

@@ -1,5 +1,6 @@
 import map from 'lodash/map';
 import find from 'lodash/find';
+import axios from 'axios';
 import connect from '../services/websockets';
 
 const errorMessage = {
@@ -53,7 +54,7 @@ const resetAttackConfig = {
 
 const socket = connect();
 export default {
-  // if the application grows start namespacing modules
+  // if the application grows start name-spacing modules
   // namespaced: true,
   state: {
     gameVictory: null,
@@ -74,7 +75,8 @@ export default {
     gamesList: [],
     createGameError: null,
     currentGame: {},
-    notification: null
+    notification: null,
+    settings: {}
   },
   getters: {
     isTurnAttack({
@@ -160,6 +162,11 @@ export default {
         ...attackConfig
       };
     },
+    settings(state, settings) {
+      state.settings = {
+        ...settings
+      };
+    },
     gameVictory(state, playerId) {
       const { currentGame } = state;
       const player = find(currentGame.players, p => p.id === playerId);
@@ -225,6 +232,14 @@ export default {
     END_TURN({ commit }) {
       commit('showReinforceUI', false);
       socket.emit(events.endTurn);
+    },
+    async LOAD_SETTINGS({ commit }) {
+      try {
+        const { data } = await axios.get('/settings');
+        commit('settings', data);
+      } catch (e) {
+        console.warn(e);
+      }
     },
     START_SOCKET_LISTENERS({ commit }) {
       socket.on(listeners.connect, () => commit('playerID', socket.id));
