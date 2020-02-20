@@ -1,10 +1,15 @@
 @import '../../styles/variables.scss';
 
+$input-checkbox-background: transparent !default;
+$input-checkbox-color: #fff !default;
+$input-checkbox-border-bottom: 1px solid #fff !default;
+$input-checkbox-outline-color: darken(#fff, 15%) !default;
+
 .input-checkbox {
-  background: transparent;
-  color: #fff;
+  background: $input-checkbox-background;
+  color: $input-checkbox-color;
   border: none;
-  border-bottom: 1px solid #fff;
+  border-bottom: $input-checkbox-border-bottom;
   width: auto;
   margin-right: 10px;
   display: inline-block;
@@ -14,7 +19,7 @@
   }
 
   &:focus {
-    outline-color: darken(#fff, 15%);
+    outline-color: $input-checkbox-outline-color;
     outline-width: 5px;
   }
 

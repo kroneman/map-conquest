@@ -1,12 +1,48 @@
 @import '../../styles/variables.scss';
 
+$button-primary-color: #fff !default;
+$button-primary-background: transparent !default;
+$button-primary-border: 1px solid #fff !default;
+$button-primary-spacing: 0 30px !default;
+
+$button-primary-hover-background: #fff !default;
+$button-primary-hover-color: $color-styleguide-primary !default;
+
+$button-primary: (
+  default: (
+    height: 40px,
+    color: $button-primary-color,
+    background: $button-primary-background,
+    border: $button-primary-border
+  ),
+  hover: (
+    color: $button-primary-hover-color,
+    background: $button-primary-hover-background
+  )
+);
+
+@mixin button-variant($config: (default: (), hover: ())) {
+  $default-styles: map-get($map: $button-primary, $key: 'default');
+  @each $property, $value in $default-styles {
+    #{$property}: #{$value};
+  }
+
+  $hover-styles: map-get($map: $button-primary, $key: 'hover');
+  &:hover {
+    @each $property, $value in $hover-styles {
+      #{$property}: #{$value};
+    }
+  }
+}
+
 .button {
+  font-size: 1em;
+
   &,
   &:visited,
   &:active {
     text-decoration: none;
   }
-  font-size: 1em;
 
   &--no-wrap {
     white-space: nowrap;
@@ -17,15 +53,6 @@
     transition: all .2s ease-in-out;
     display: flex;
     flex-wrap: nowrap;
-    padding: 0 30px;
-    height: 40px;
-    border: 1px solid #fff;
-    background: transparent;
-    color: #fff;
-
-    &:hover {
-      background: #fff;
-      color: $color-styleguide-primary;
-    }
+    @include button-variant($button-primary);
   }
 }
