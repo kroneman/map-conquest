@@ -57,6 +57,8 @@ export default {
 
       this.$nextTick().then(() => {
         const { reinforceAmmountInput } = this.$refs;
+        const { value } = reinforceAmmountInput;
+        this.validateBounds(value);
         reinforceAmmountInput.focus();
       });
     }
