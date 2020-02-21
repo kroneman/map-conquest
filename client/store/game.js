@@ -42,9 +42,11 @@ const listeners = {
 };
 
 const resetReinforceConfig = {
+  min: 0,
+  max: 5,
   reinforceFrom: null,
   reinforceTo: null,
-  ammount: 0
+  amount: 0
 };
 
 const resetAttackConfig = {
@@ -257,9 +259,15 @@ export default {
       socket.on(events.attackTerritorySuccess, (payload) => {
         const { attackerReinforceConfig, gameDetails } = payload;
         const { attackerTerritory, defendingTerritory } = attackerReinforceConfig;
+        // REINFORCEMENTS ON SUCCESSFUL ATTACK
+        // for the bots we automatically transfer armies already
+        const minArmyTransfer = 0;
+        const maxArmyTransfer = attackerTerritory.armies - 1;
         commit('showReinforceUI', true);
         commit('gameDetails', gameDetails);
         commit('reinforceConfig', {
+          min: minArmyTransfer,
+          max: maxArmyTransfer,
           reinforceFrom: attackerTerritory.id,
           reinforceTo: defendingTerritory.id
         });

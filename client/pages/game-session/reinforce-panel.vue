@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="isShow"
+    v-show="isShow"
     class="reinforce-panel"
   >
     <div class="reinforce-panel__info">
@@ -13,9 +13,11 @@
       <span class="reinforce-panel__amount">
         Amount:
         <input
+          ref="reinforceAmmountInput"
           :value="amount"
           type="text"
           @keyup="onKeyUp($event)"
+          @keyup.enter="confirmReinforcement"
         >
         <game-button
           @click="confirmReinforcement"
@@ -34,10 +36,6 @@ import gameButton from '../../components/button/button.vue';
 export default {
   name: 'ReinforcePanel',
   components: { gameButton },
-  props: {
-    min: { type: Number, default: 0 },
-    max: { type: Number, default: 5 }
-  },
   data() {
     return {
       amount: 0
@@ -51,6 +49,18 @@ export default {
       return this.$store.state.game.reinforceConfig;
     }
   },
+  watch: {
+    isShow(newValue, prevValue) {
+      if (!newValue || newValue === prevValue) {
+        return;
+      }
+
+      this.$nextTick().then(() => {
+        const { reinforceAmmountInput } = this.$refs;
+        reinforceAmmountInput.focus();
+      });
+    }
+  },
   methods: {
     onKeyUp: debounce(function keyUp(e) {
       e.preventDefault();
@@ -62,17 +72,17 @@ export default {
       const parsedNumber = parseInt(number, 10);
       const isNaN = Number.isNaN(parsedNumber);
       if (isNaN) {
-        this.setAmmount(this.min);
+        this.setAmmount(this.reinforceConfig.min);
         return;
       }
 
-      if (Math.min(parsedNumber, this.max) === this.max) {
-        this.setAmmount(this.max);
+      if (Math.min(parsedNumber, this.reinforceConfig.max) === this.reinforceConfig.max) {
+        this.setAmmount(this.reinforceConfig.max);
         return;
       }
 
-      if (Math.max(parsedNumber, this.min) === this.min) {
-        this.setAmmount(this.min);
+      if (Math.max(parsedNumber, this.reinforceConfig.min) === this.reinforceConfig.min) {
+        this.setAmmount(this.reinforceConfig.min);
         return;
       }
 
@@ -87,6 +97,9 @@ export default {
       this.amount = value;
     },
     confirmReinforcement() {
+      // on confirm double check the amount
+      // sometimes there is a lefover from a previous reinforce
+      this.validateBounds(this.amount);
       const reinforceConfig = {
         ...this.reinforceConfig,
         amount: this.amount
