@@ -11,6 +11,7 @@
         class="lobby-players-list__update"
       >
         <input
+          :ref="'playerName' + player.id"
           v-model="playerName"
           :placeholder="player.id"
           type="text"
@@ -53,6 +54,7 @@
 </template>
 
 <script>
+import has from 'lodash/has';
 import InputSelectColor from '../../components/input-select/input-select-color.vue';
 
 export default {
@@ -76,8 +78,22 @@ export default {
     isEditing: false
   }),
   methods: {
-    edit() {
+    edit(playerID) {
       this.isEditing = true;
+
+      this.$nextTick().then(() => {
+        const playerNameInput = `playerName${playerID}`;
+        if (!has(this.$refs, playerNameInput)) {
+          return;
+        }
+
+        const nameInput = this.$refs[playerNameInput];
+        if (nameInput.length > 0 && nameInput[0]) {
+          nameInput[0].focus();
+        } else {
+          nameInput.focus();
+        }
+      });
     },
     cancelEdit() {
       this.isEditing = false;

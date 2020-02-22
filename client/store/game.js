@@ -110,6 +110,10 @@ export default {
       const { isTurnAttack, isTurnDraft } = getters;
       const isTurnReinforce = playersTurn && !isTurnAttack && !isTurnDraft;
       return isTurnReinforce;
+    },
+    territoryByID({ currentGame }) {
+      const { territories } = currentGame;
+      return territories || {};
     }
   },
   mutations: {
@@ -225,7 +229,11 @@ export default {
 
       socket.emit(events.endTurnAttack);
     },
-    REINFORCE_TERRITORY_UI({ commit }) {
+    REINFORCE_RESET({ commit }) {
+      commit('reinforceConfig', resetReinforceConfig);
+    },
+    REINFORCE_TERRITORY_UI(localStore) {
+      const { commit } = localStore;
       commit('showReinforceUI', true);
     },
     REINFORCE_CONFIRM(localStore, reinforceConfig) {
