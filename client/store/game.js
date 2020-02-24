@@ -248,6 +248,7 @@ export default {
         const { data } = await axios.get('/settings');
         commit('settings', data);
       } catch (e) {
+        // eslint-disable-next-line no-console
         console.warn(e);
       }
     },
