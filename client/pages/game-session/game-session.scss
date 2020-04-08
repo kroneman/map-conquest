@@ -7,19 +7,31 @@ $panel-height: $chat-height;
   color: #fff;
 
   &__unclaimed-territories {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    z-index: 1;
+    // position: fixed;
+    // top: 20px;
+    // left: 20px;
+    // z-index: 1;
     color: #fff;
   }
 
-  &__player-info {
+  &__info-left {
+    background: $color-styleguide-secondary;
     position: fixed; 
-    left: 20px;
-    top: 40px;
+    left: 0;
+    top: 0;
     z-index: 1;
     user-select: none;
+    padding: 20px;
+    border-bottom-right-radius: 3px;
+    border-bottom: 4px solid #fff;
+  }
+
+  &__player-info {
+    // position: fixed; 
+    // left: 20px;
+    // top: 40px;
+    // z-index: 1;
+    // user-select: none;
   }
 
   &__turn-phase {
