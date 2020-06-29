@@ -12,13 +12,16 @@ module.exports = {
   getTerritoryList
 };
 
+/**
+ * @returns {Array<string>} list of territories
+ */
 function getTerritoryList() {
   return Object.keys(territoryGraph);
 }
 
 /**
  * Using the reference finds the territory with the most armies
- * If two have the same number of armies it doesn't differetiate
+ * If two have the same number of armies it doesn't differentiate
  * Just grabs the one appearing later in the reduce
  * @param {Array<string>} territoryList to check
  * @param {Object} territories reference

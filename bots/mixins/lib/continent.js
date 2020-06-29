@@ -91,6 +91,10 @@ function getContinentIOwnMostOf(continentPercentages) {
   return continentPercentages[idOfContinent];
 }
 
+/**
+ * @param {Object} continentPercentages
+ * @returns {Object} continent with lowest ownership
+ */
 function getContinentIOwnLeastOf(continentPercentages) {
   const continentStatusList = Object.keys(continentPercentages);
   const idOfContinent = reduce(continentStatusList, (result, continent) => {

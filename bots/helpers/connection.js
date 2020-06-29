@@ -27,10 +27,18 @@ module.exports = class BotConnection {
     this.speed = 100;
   }
 
+  /**
+   * Events getter
+   * Called when this.events gets accessed
+   */
   get events() {
     return this.privateEvents;
   }
 
+  /**
+   * Events Setter
+   * Called when this.events changes
+   */
   set events(events) {
     this.privateEvents = {
       ...this.privateEvents,
