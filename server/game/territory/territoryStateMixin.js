@@ -212,9 +212,10 @@ module.exports = GameInstanceState => class extends GameInstanceState {
   }
 
   /**
-   * @param {stirng} territoryID
+   * @param {string} territoryID
    * @param {string} playerID
    * @param {number} armies
+   * @returns {boolean}
    */
   takeOverTerritory(territoryID, playerID, armies) {
     const isTerritory = has(this.territories, territoryID);

@@ -47,12 +47,12 @@ function createTerritoryList() {
 function createTerritoryByContinent() {
   const continents = {};
   map(features, (feature) => {
-    const { contintent, province } = feature.properties;
-    if (!has(continents, contintent)) {
-      continents[contintent] = [];
+    const { continent, province } = feature.properties;
+    if (!has(continents, continent)) {
+      continents[continent] = [];
     }
 
-    continents[contintent].push(province);
+    continents[continent].push(province);
   });
 
   return continents;

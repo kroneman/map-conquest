@@ -18,7 +18,7 @@ const {
 
 module.exports = SuperClass => class extends SuperClass {
   /**
-   * Overides default BaseBot turnReinforcements
+   * Overrides default BaseBot turnReinforcements
    * Therefore logging PointBasedAttack for clarification
    * @param {Object} gameDetails instance state of current game
    */
@@ -31,10 +31,6 @@ module.exports = SuperClass => class extends SuperClass {
       return;
     }
 
-    // can the enemy be denied points by removing their complete ownership?
-    // get list of continents I don't own
-    // see if i can get a piece
-    // then further my attack
     const continentStatus = getStatusByContinent(allMyTerritories);
     const continentIOwnLeastOf = getContinentIOwnLeastOf(continentStatus);
     const continentIOwnMostOf = selectContinentToAttack(allMyTerritories);
@@ -50,7 +46,7 @@ module.exports = SuperClass => class extends SuperClass {
   }
 
   /**
-   * Overides default BaseBot turnAttack
+   * Overrides default BaseBot turnAttack
    * Therefore logging PointBasedAttack for clarification
    * @param {Object} gameDetails instance state of current game
    */

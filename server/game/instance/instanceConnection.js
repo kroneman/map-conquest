@@ -65,7 +65,7 @@ module.exports = ConnectionClass => class extends ConnectionClass {
     if (this.gameInstance.gameStarted) {
       logger.debug(messages.cannotStartGameAlreadyStarted);
 
-      if (this.gameInstance.isGameSpectator({ id: this.playerID })) {
+      if (this.gameInstance.isSpectator(this.playerID)) {
         // only emit to spectator UI that the game has started, rest are in game
         this.socket.emit(this.events.startGame);
       }

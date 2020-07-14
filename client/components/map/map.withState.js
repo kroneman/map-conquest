@@ -141,17 +141,19 @@ export default {
       if (reinforceFrom && reinforceTo) {
         this.resetHighlight(reinforceFrom);
         this.resetHighlight(reinforceTo);
-        this.$store.commit('reinforceConfig', {
-          reinforceTo: null,
-          reinforceFrom: null
-        });
+        this.$store.dispatch('REINFORCE_RESET');
         return false;
       }
 
       if (!reinforceFrom) {
+        const attackerTerritory = this.$store.getters.territoryByID[id];
+        const minArmyTransfer = 0;
+        const maxArmyTransfer = attackerTerritory.armies - 1;
         this.highlightTerritory(id);
         this.$store.commit('reinforceConfig', {
-          reinforceFrom: id
+          reinforceFrom: id,
+          min: minArmyTransfer,
+          max: maxArmyTransfer
         });
         return false;
       }

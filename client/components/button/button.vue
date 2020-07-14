@@ -24,10 +24,11 @@ export default {
   },
   methods: {
     buttonStyles() {
+      const classHasLength = classFragment => classFragment.length > 0;
       return [
         this.variantClass(),
         this.wordWrapClass()
-      ].filter(c => c.length > 0).join(' ');
+      ].filter(classHasLength).join(' ');
     },
     variantClass() {
       return this.variant ? `button--${this.variant}` : '';

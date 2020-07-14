@@ -16,12 +16,12 @@ const {
 
 module.exports = SuperClass => class extends SuperClass {
   /**
-   * Overides default BaseBot turnReinforcements
-   * Therefore logging ContintentBasedAttack for clarification
+   * Overrides default BaseBot turnReinforcements
+   * When overriding
    * @param {Object} gameDetails instance state of current game
    */
   turnReinforcements({ territoryMap, territories }, { reinforcements }) {
-    logger.debug(`ContintentBasedAttack: turnReinforcements: ${reinforcements}`);
+    logger.debug(`ContinentBasedAttack: turnReinforcements: ${reinforcements}`);
     const allTerritories = Object.keys(territories);
     const allMyTerritories = territoryMap[this.botPlayerID];
     const isProceed = validateIfTurnCanProceed(allTerritories, allMyTerritories);
@@ -40,12 +40,12 @@ module.exports = SuperClass => class extends SuperClass {
   }
 
   /**
-   * Overides default BaseBot turnAttack
-   * Therefore logging ContintentBasedAttack for clarification
+   * Overrides default BaseBot turnAttack
+   * Therefore logging ContinentBasedAttack for clarification
    * @param {Object} gameDetails instance state of current game
    */
   turnAttack({ territories, territoryMap }) {
-    logger.debug('ContintentBasedAttack: turnAttack');
+    logger.debug('ContinentBasedAttack: turnAttack');
     const allTerritories = Object.keys(territories);
     const allMyTerritories = territoryMap[this.botPlayerID];
     const isProceed = validateIfTurnCanProceed(allTerritories, allMyTerritories);

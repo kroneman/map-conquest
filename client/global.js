@@ -10,4 +10,5 @@ new Vue({
   render: h => h(app)
 }).$mount('#root');
 
+store.dispatch('LOAD_SETTINGS');
 store.dispatch('START_SOCKET_LISTENERS');

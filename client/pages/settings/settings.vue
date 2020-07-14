@@ -3,7 +3,7 @@
     <navigation />
     <div class="settings">
       <div class="settings__title">
-        Map COnquest
+        Map Conquest
       </div>
       <div class="text-center">
         Settings

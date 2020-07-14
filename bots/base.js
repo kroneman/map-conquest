@@ -67,7 +67,7 @@ module.exports = class BaseBot extends BotConnection {
     this.emitGetGameDetails = gameID => this.sleep(
       () => this.socket.emit(this.events.getGameDetails, gameID)
     );
-    this.emitJoingame = selectedGame => this.sleep(
+    this.emitJoinGame = selectedGame => this.sleep(
       () => this.socket.emit(this.events.joinGame, { selectedGame })
     );
   }
@@ -83,14 +83,14 @@ module.exports = class BaseBot extends BotConnection {
   joinGame({ games }) {
     logger.debug('attempt-join-game');
     const botGame = find(games, game => game.id.includes('bot'));
-    const isBotandGameAvailable = !this.gameJoined && botGame && botGame.id;
+    const isBotAndGameAvailable = !this.gameJoined && botGame && botGame.id;
 
     // if not checked will causes an infinite loop
-    if (!isBotandGameAvailable) {
+    if (!isBotAndGameAvailable) {
       return;
     }
 
-    this.emitJoingame(botGame.id);
+    this.emitJoinGame(botGame.id);
     this.emitGetGameDetails(botGame.id);
     this.gameJoined = true;
 
@@ -179,7 +179,7 @@ module.exports = class BaseBot extends BotConnection {
       isTurnAttack: () => {
         this.turnAttack(gameDetails);
       },
-      // handled by seperate socket event
+      // handled by separate socket event
       isTurnEndReinforcements: () => {}
     };
   }
@@ -256,7 +256,6 @@ module.exports = class BaseBot extends BotConnection {
     if (playerID === this.botPlayerID) {
       logger.info('I have Won the game!');
       process.exit(0);
-      return;
     }
 
     logger.info('I lost! :( May the scripter improve my logic');

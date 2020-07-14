@@ -6,19 +6,24 @@
           @highlights-to-remove="removeHighlight"
         />
       </div>
-      <div
-        v-if="!!numUnclaimedTerritories"
-        class="game-session__unclaimed-territories"
-      >
-        Unclaimed Territories: {{ numUnclaimedTerritories }}
+
+      <div class="game-session__info-left">
+        <div
+          v-if="!!numUnclaimedTerritories"
+          class="game-session__unclaimed-territories"
+        >
+          Unclaimed Territories: {{ numUnclaimedTerritories }}
+        </div>
+
+        <h4>Reinfocements</h4>
+        <players-list
+          class="game-session__player-info"
+          :players="currentGame.players"
+          :current-player-turn="currentPlayerTurn"
+          :hide-title="true"
+          :hide-toggle="true"
+        />
       </div>
-      <players-list
-        class="game-session__player-info"
-        :players="currentGame.players"
-        :current-player-turn="currentPlayerTurn"
-        :hide-title="true"
-        :hide-toggle="true"
-      />
       <div
         class="game-session__map"
       >

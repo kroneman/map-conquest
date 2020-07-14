@@ -3,6 +3,10 @@ require('dotenv').config({
   path: path.resolve('.env')
 });
 
+const {
+  DEBUG_GAME_CREATE_GAME_AS_SPECTATOR
+} = process.env;
+
 const PORT = process.env.PORT || 3000;
 const Express = require('express');
 const http = require('http');
@@ -16,6 +20,13 @@ const logger = require('./logger');
 
 app.use('/', Express.static('dist'));
 io.on('connection', socket => new Game(io).connect(socket));
+
+app.get('/settings', (req, res) => {
+  res.send({
+    createGameAsSpectator: DEBUG_GAME_CREATE_GAME_AS_SPECTATOR
+      ? DEBUG_GAME_CREATE_GAME_AS_SPECTATOR === 'true' : false
+  });
+});
 
 server.listen(PORT, (err) => {
   if (err) {

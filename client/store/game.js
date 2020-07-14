@@ -1,5 +1,6 @@
 import map from 'lodash/map';
 import find from 'lodash/find';
+import axios from 'axios';
 import connect from '../services/websockets';
 
 const errorMessage = {
@@ -41,9 +42,11 @@ const listeners = {
 };
 
 const resetReinforceConfig = {
+  min: 0,
+  max: 5,
   reinforceFrom: null,
   reinforceTo: null,
-  ammount: 0
+  amount: 0
 };
 
 const resetAttackConfig = {
@@ -53,7 +56,7 @@ const resetAttackConfig = {
 
 const socket = connect();
 export default {
-  // if the application grows start namespacing modules
+  // if the application grows start name-spacing modules
   // namespaced: true,
   state: {
     gameVictory: null,
@@ -74,7 +77,8 @@ export default {
     gamesList: [],
     createGameError: null,
     currentGame: {},
-    notification: null
+    notification: null,
+    settings: {}
   },
   getters: {
     isTurnAttack({
@@ -106,6 +110,10 @@ export default {
       const { isTurnAttack, isTurnDraft } = getters;
       const isTurnReinforce = playersTurn && !isTurnAttack && !isTurnDraft;
       return isTurnReinforce;
+    },
+    territoryByID({ currentGame }) {
+      const { territories } = currentGame;
+      return territories || {};
     }
   },
   mutations: {
@@ -158,6 +166,11 @@ export default {
       state.attackConfig = {
         ...state.attackConfig,
         ...attackConfig
+      };
+    },
+    settings(state, settings) {
+      state.settings = {
+        ...settings
       };
     },
     gameVictory(state, playerId) {
@@ -216,7 +229,11 @@ export default {
 
       socket.emit(events.endTurnAttack);
     },
-    REINFORCE_TERRITORY_UI({ commit }) {
+    REINFORCE_RESET({ commit }) {
+      commit('reinforceConfig', resetReinforceConfig);
+    },
+    REINFORCE_TERRITORY_UI(localStore) {
+      const { commit } = localStore;
       commit('showReinforceUI', true);
     },
     REINFORCE_CONFIRM(localStore, reinforceConfig) {
@@ -225,6 +242,15 @@ export default {
     END_TURN({ commit }) {
       commit('showReinforceUI', false);
       socket.emit(events.endTurn);
+    },
+    async LOAD_SETTINGS({ commit }) {
+      try {
+        const { data } = await axios.get('/settings');
+        commit('settings', data);
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.warn(e);
+      }
     },
     START_SOCKET_LISTENERS({ commit }) {
       socket.on(listeners.connect, () => commit('playerID', socket.id));
@@ -242,9 +268,15 @@ export default {
       socket.on(events.attackTerritorySuccess, (payload) => {
         const { attackerReinforceConfig, gameDetails } = payload;
         const { attackerTerritory, defendingTerritory } = attackerReinforceConfig;
+        // REINFORCEMENTS ON SUCCESSFUL ATTACK
+        // for the bots we automatically transfer armies already
+        const minArmyTransfer = 0;
+        const maxArmyTransfer = attackerTerritory.armies - 1;
         commit('showReinforceUI', true);
         commit('gameDetails', gameDetails);
         commit('reinforceConfig', {
+          min: minArmyTransfer,
+          max: maxArmyTransfer,
           reinforceFrom: attackerTerritory.id,
           reinforceTo: defendingTerritory.id
         });
