@@ -39,7 +39,7 @@ const StateInstance = new State();
 describe('Server Territory State Mixin', () => {
   it('StateInstance.availableTerritories', () => {
     // actual length should be 42, also this will vary based on the dataset
-    expect(StateInstance.availableTerritories).to.have.lengthOf(41);
+    expect(StateInstance.availableTerritories).to.have.lengthOf(42);
 
     const sampleTerritory = sample(StateInstance.availableTerritories);
     const dummyPlayer = createDummyPlayer();
@@ -188,7 +188,7 @@ describe('Server Territory State Mixin', () => {
     StateInstance.clearTerritoryClaim(sampleTerritory);
 
     const playerTerritoriesAfter = StateInstance.getPlayerTerritories(player.id);
-    expect(playerTerritoriesAfter).to.deep.equal(undefined);
+    expect(playerTerritoriesAfter).to.deep.equal([]);
   });
 
   it('StateInstance.takeOverTerritory():', () => {

@@ -9,7 +9,7 @@ const commonConfig = {
 };
 
 /**
- * Setup this way so we can run multiple wepback configurations if necessary
+ * Setup this way so we can run multiple webpack configurations if necessary
  * Also initially was running typescript on the server and this is a remnant of that
  */
 const webpackConfig = [
@@ -19,6 +19,4 @@ const webpackConfig = [
   }
 ];
 
-// For when debugging is necessary
-// console.log(webpackConfig);
 module.exports = webpackConfig;

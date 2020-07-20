@@ -77,7 +77,7 @@ module.exports = class Connection {
   }
 
   /**
-   * Whenever a mixin or descendent sets hanlders
+   * Whenever a mixin or descendent sets handlers
    * Keep a combined copy for internal use to bind events
    * @param {{ [key:string]: Function }} handlers
    */
@@ -141,7 +141,7 @@ module.exports = class Connection {
   }
 
   /**
-   * @param {Array<String>} rooms to check against for uniquness
+   * @param {Array<String>} rooms to check against for uniqueness
    * @param {String} name of room to validate
    * @returns {Boolean}
    */

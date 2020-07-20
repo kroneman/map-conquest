@@ -1,24 +1,24 @@
 const path = require('path');
 const map = require('lodash/map');
 const turf = require('@turf/turf');
-const fse = require('fs-extra');
+const { writeJSON } = require('fs-extra');
 
-const OUTPUT_PATH = path.resolve(__dirname, '../data/centersofmass.json');
-const dataset = require('../data/mapboxdataset.json');
+const OUTPUT_PATH = path.resolve(__dirname, '../data/centers-of-mass.json');
+const dataset = require('../data/mapbox-dataset.json');
 
 const { features } = dataset;
 
 main();
 async function main() {
-  const centersofMass = addCenterOfMass(features);
-  await fse.writeJSON(OUTPUT_PATH, {
+  const centersOfMass = addCenterOfMass(features);
+  await writeJSON(OUTPUT_PATH, {
     type: 'FeatureCollection',
-    features: centersofMass
+    features: centersOfMass
   });
 }
 
 /**
- * Validates if all features have the required properites
+ * Validates if all features have the required properties
  */
 function addCenterOfMass() {
   return map(features, (feature) => {

@@ -5,8 +5,8 @@ const trim = require('lodash/trim');
 const filter = require('lodash/filter');
 const fse = require('fs-extra');
 
-const OUTPUT_PATH = path.resolve(__dirname, '../data/gameterritorylist.json');
-const dataset = require('../data/mapboxdataset.json');
+const OUTPUT_PATH = path.resolve(__dirname, '../data/game-territory-list.json');
+const dataset = require('../data/mapbox-dataset.json');
 
 const { features } = dataset;
 
@@ -34,7 +34,7 @@ async function main() {
 }
 
 /**
- * Validates if all features have the required properites
+ * Validates if all features have the required properties
  * @param {*} features geoJSON from mapbox api downloaded using ./get-mapbox-dataset.js
  */
 function createTerritoryList() {
@@ -127,29 +127,23 @@ function validateTerritoryGraph(territoryGraph) {
  * @returns {object} with continent id as key and number as value
  */
 function setReinforcementsForContinent(continents) {
-  const reinforcements = {};
+  const reinforcements = {
+    africa: 3,
+    europe: 5,
+    asia: 7,
+    australia: 2,
+    'north-america': 5,
+    'south-america': 2
+  };
+
   map(Object.keys(continents), (continent) => {
-    switch (continent) {
-      case ('africa'):
-        reinforcements[continent] = 3;
-        break;
-      case ('europe'):
-        reinforcements[continent] = 5;
-        break;
-      case ('asia'):
-        reinforcements[continent] = 7;
-        break;
-      case ('australia'):
-        reinforcements[continent] = 2;
-        break;
-      case ('north-america'):
-        reinforcements[continent] = 5;
-        break;
-      case ('south-america'):
-        reinforcements[continent] = 2;
-        break;
-      default:
+    if (has(reinforcements, continent)) {
+      return;
     }
+
+    // eslint-disable-next-line no-console
+    console.error(`continent ${continent} has no reinforcement value`);
+    reinforcements[continent] = 0;
   });
 
   return reinforcements;

@@ -63,7 +63,7 @@ module.exports = class BotConnection {
   }
 
   /**
-   * Util to speed up or slow down game
+   * Util to speed up or slow down game for testing
    * Or portions of the game
    */
   sleep(fn, sleepSpeed = this.speed) {
@@ -78,7 +78,7 @@ module.exports = class BotConnection {
   }
 
   /**
-   * Whenever a mixin or descendent sets hanlders
+   * Whenever a mixin or descendent sets handlers
    * Keep a combined copy for internal use to bind events
    * @param {{ [key:string]: Function }} handlers
    */

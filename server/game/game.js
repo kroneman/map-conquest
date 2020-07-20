@@ -33,7 +33,7 @@ class Game extends ConnectionClass {
       leaveGame: 'leave-game',
       joinGameSuccess: 'join-game-success',
       listGames: 'list-games',
-      updateReinfocementConfig: 'update-reinfocement-config'
+      updateReinforcementConfig: 'update-reinforcement-config'
     };
 
     this.handlers = {
@@ -57,7 +57,7 @@ class Game extends ConnectionClass {
     this.setConnectionToRoom(newGameID);
     this.listGames();
 
-    // delete a pevious instance with the same name
+    // delete a previous instance with the same name
     gameState.deleteGameInstance(newGameID);
     const gameInstance = gameState.getGameInstance(newGameID);
     this.addPlayerToGameInstance(gameInstance, gameSettings.joinAsSpectator);

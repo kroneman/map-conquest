@@ -85,8 +85,8 @@ class Graph {
   }
 
   /**
-   * @param {string} from node/vertice
-   * @param {string} to node/vertice
+   * @param {string} from node/vertices
+   * @param {string} to node/vertices
    * @returns {boolean}
    */
   hasConnection(from, to) {

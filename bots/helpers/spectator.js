@@ -41,7 +41,7 @@ module.exports = class Spectator extends BotConnection {
 
     logger.info('onListGames: %o', response);
     const config = {
-      name: 'botsareautonomous',
+      name: 'bots-are-autonomous',
       joinAsSpectator: true
     };
     this.createGame(config);

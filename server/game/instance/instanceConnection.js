@@ -120,7 +120,7 @@ module.exports = ConnectionClass => class extends ConnectionClass {
     }
 
     this.gameInstance.removeInactivePlayers(Object.keys(connectionsInGame));
-    logger.silly(`${this.events.getGameDetails} %0`, this.gameInstance);
+    logger.silly(`${this.events.getGameDetails} %o`, this.gameInstance);
     this.emitToAllInGame(this.events.gameDetails, this.gameInstance);
   }
 

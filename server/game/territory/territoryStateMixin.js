@@ -6,12 +6,12 @@ const findIndex = require('lodash/findIndex');
 const difference = require('lodash/difference');
 const logger = require('../../logger');
 
-const originalTerritoryList = require('../../../data/gameterritorylist.json').territories;
-const territoryListByContinent = require('../../../data/gameterritorylist.json').continents;
+const originalTerritoryList = require('../../../data/game-territory-list.json').territories;
+const territoryListByContinent = require('../../../data/game-territory-list.json').continents;
 
 const messages = {
   playerMustOwnBothTerritories: 'Player Must Own Both Territories To reinforce',
-  invalidReinforcementAmmount: 'Must leave at least one army in territory reinforcing from',
+  invalidReinforcementAmount: 'Must leave at least one army in territory reinforcing from',
   playerDoesntHaveColor: 'Something went wrong, player doesn\'t have an assigned color',
   noTerritoryID: territoryID => `TerritoryID: ${territoryID} does not exist`,
   cantReinforceTerritoryPlayerDoesntOwn: territoryID => `Cant reinforce ${territoryID} as you don't own it`,
@@ -111,6 +111,7 @@ module.exports = GameInstanceState => class extends GameInstanceState {
    * @returns {object} success and [message]
    */
   claimTerritory(territoryID, player) {
+    console.log(this.territories);
     if (has(this.territories, territoryID)) {
       return {
         success: false,
@@ -164,7 +165,9 @@ module.exports = GameInstanceState => class extends GameInstanceState {
    * @returns {array<string>}
    */
   getPlayerTerritories(playerID) {
-    return this.territoryMap[playerID];
+    const { territoryMap } = this;
+    const playerHasTerritories = has(territoryMap, playerID);
+    return playerHasTerritories ? territoryMap[playerID] : [];
   }
 
   /**
@@ -285,7 +288,7 @@ module.exports = GameInstanceState => class extends GameInstanceState {
     if (!validAmount) {
       return {
         success: false,
-        message: messages.invalidReinforcementAmmount
+        message: messages.invalidReinforcementAmount
       };
     }
 
@@ -297,6 +300,8 @@ module.exports = GameInstanceState => class extends GameInstanceState {
   }
 
   checkContinentOwnership(player) {
-    return this.continentOwnership[player.id];
+    const { continentOwnership } = this;
+    const ownsContinent = has(continentOwnership, player.id);
+    return ownsContinent ? this.continentOwnership[player.id] : [];
   }
 };

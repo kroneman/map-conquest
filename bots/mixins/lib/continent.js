@@ -4,7 +4,7 @@ const intersection = require('lodash/intersection');
 const has = require('lodash/has');
 const map = require('lodash/map');
 
-const territoryListByContinent = require('../../../data/gameterritorylist.json').continents;
+const territoryListByContinent = require('../../../data/game-territory-list.json').continents;
 const { getCanAttackTerritoryList, getCanAttack, getTerritoryList } = require('./territory');
 
 const continentList = Object.keys(territoryListByContinent);

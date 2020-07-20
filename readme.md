@@ -5,7 +5,7 @@ Its been a learning and experimentation project for me for the last bit.
 
 Experimenting with inheritance, classes etc
 
-If you want to see a quick example of bots playing the game i uploaded a short video of it on [youtube](https://youtu.be/j9564NkKGi0).
+If you want to see a quick example of bots playing the game i uploaded a short video of it on [Youtube](https://youtu.be/j9564NkKGi0).
 
 Issues and contributions are welcome. As I mentioned earlier this project is a way for me to continue learning & building.
 

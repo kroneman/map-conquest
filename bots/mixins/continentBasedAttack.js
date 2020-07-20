@@ -2,7 +2,7 @@ const intersection = require('lodash/intersection');
 const has = require('lodash/has');
 const sample = require('lodash/sample');
 
-const { territoryGraph } = require('../../data/gameterritorylist.json');
+const { territoryGraph } = require('../../data/game-territory-list.json');
 const logger = require('../helpers/logger');
 
 const MIN_ATTACK_FROM_ARMIES = 3;

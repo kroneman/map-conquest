@@ -9,7 +9,6 @@ const removeFile = util.promisify(fse.unlink);
 
 const LOG_FOLDER = path.resolve(__dirname, '../logs');
 
-
 cleanLogs();
 async function cleanLogs() {
   const dirContents = await readDir(LOG_FOLDER);

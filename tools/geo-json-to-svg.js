@@ -12,8 +12,8 @@ const OUTPUT_PATH = path.resolve(__dirname, '../client/components/map');
 const VUE_TEMPLATE = path.resolve(OUTPUT_PATH, './map.template.vue');
 const OUTPUT_FILE = path.join(OUTPUT_PATH, './map.generated.vue');
 
-const dataset = require('../data/mapboxdataset.json');
-const datasetCenterOfMass = require('../data/centersofmass.json');
+const dataset = require('../data/mapbox-dataset.json');
+const datasetCenterOfMass = require('../data/centers-of-mass.json');
 
 const styles = {
   Point: {

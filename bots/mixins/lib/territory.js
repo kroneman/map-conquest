@@ -2,7 +2,7 @@ const reduce = require('lodash/reduce');
 const uniq = require('lodash/uniq');
 
 const logger = require('../../helpers/logger');
-const { territoryGraph } = require('../../../data/gameterritorylist.json');
+const { territoryGraph } = require('../../../data/game-territory-list.json');
 
 
 module.exports = {

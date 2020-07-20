@@ -6,7 +6,7 @@ const uniq = (arr = []) => Object.keys(arr.reduce(reduceToObject, {}));
 
 class GraphWithShortestPath extends Graph {
   /**
-   * Shortest path using an unoptimized version of dijkstra's shortest path solution
+   * Shortest path using an un-optimized version of dijkstra's shortest path solution
    * https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
    * @param {string} from startingNode
    * @param {string} to endingNode
@@ -28,7 +28,7 @@ class GraphWithShortestPath extends Graph {
    * !!recursive
    * !!has side effects
    *
-   * Markes nodes as at a certain distance from the starting node
+   * Marks nodes as at a certain distance from the starting node
    * Each time a new set of edges are retrieved
    * and filtered against visitedDistance keys
    * @param {{ edges: array, lastDistance: number }}
@@ -78,7 +78,7 @@ class GraphWithShortestPath extends Graph {
    * @param {string} to endingNode
    * @param {array<string>} path and eventual result
    * @param {{ [string]: number }} visitedDistance object with reference distances from startingNode
-   * @returns {array<string>} shotest path
+   * @returns {array<string>} shortest path
    */
   backTrace(from, to, path = [to], visitedDistance) {
     const edges = Object.keys(this.get(to));

@@ -3,7 +3,7 @@ const GameInstanceState = require('./instance/instanceState');
 const logger = require('../logger');
 
 /**
- * This state sould probably be reactive
+ * This state should probably be reactive
  */
 module.exports = {
   memory: {

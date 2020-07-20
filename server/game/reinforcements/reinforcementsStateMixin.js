@@ -2,7 +2,7 @@
 const findIndex = require('lodash/findIndex');
 const reduce = require('lodash/reduce');
 const map = require('lodash/map');
-const { continentReinforcements } = require('../../../data/gameterritorylist.json');
+const { continentReinforcements } = require('../../../data/game-territory-list.json');
 
 const COMBINED_STARTING_ARMIES = 80;
 
