@@ -1,10 +1,21 @@
-const { exec } = require('child_process');
-const util = require('util');
+const { spawn } = require('child_process');
 const path = require('path');
 const logger = require('../../logger');
 
-const execPromise = util.promisify(exec);
 const botScriptLocation = path.resolve('./bots/bot.js');
+
+/**
+  * @param {ChildProcess} botSpawn https://nodejs.org/api/child_process.html#child_process_class_childprocess
+  * @returns {void}
+  */
+const handleProcessEvents = (botProcess) => {
+  const botLogPrefix = `BOT-${botProcess.pid}`;
+  logger.info(`${botLogPrefix}: Spawning`);
+  botProcess.on('error', () => logger.info(`${botLogPrefix}: Failed to start subprocess.`));
+  botProcess.stdout.on('data', data => logger.info(`${botLogPrefix}: %s`, data));
+  botProcess.stderr.on('data', data => logger.error(`${botLogPrefix}: %s`, data));
+  botProcess.on('exit', () => logger.info(`${botLogPrefix}: %s`, 'Exiting'));
+};
 
 module.exports = ConnectionClass => class extends ConnectionClass {
   constructor(props) {
@@ -17,15 +28,40 @@ module.exports = ConnectionClass => class extends ConnectionClass {
     this.handlers = {
       [this.events.requestBotPlayer]: this.spawnBot
     };
+
+    this.botProcesses = [];
+    this.cleanUpChildren = this.cleanUpChildren.bind(this);
+    process.on('SIGINT', this.onServerDie.bind(this));
+    process.on('exit', this.onServerDie.bind(this));
   }
 
   /**
-   * @param {string} message to add to chat
+   * Creates a bot subprocess
    * @returns {void}
    */
-  async spawnBot() {
-    logger.info(this.gameID);
-    const botInstance = await execPromise(`node ${botScriptLocation}`);
-    logger.info('%o', botInstance);
+  spawnBot() {
+    const botSpawn = spawn('node', [botScriptLocation], {});
+    handleProcessEvents(botSpawn);
+    this.botProcesses.push(botSpawn);
+  }
+
+  /**
+   * Gets called on SIGINT or Exit events
+   * @returns {void}
+   */
+  onServerDie() {
+    this.cleanUpChildren();
+  }
+
+  /**
+   * Loops through active child processes and stops them from running
+   * @returns {void}
+   */
+  cleanUpChildren() {
+    const { botProcesses } = this;
+    while (botProcesses.length) {
+      const firstInStack = botProcesses.shift();
+      firstInStack.kill(1);
+    }
   }
 };

@@ -18,7 +18,7 @@ module.exports = class BaseBot extends BotConnection {
     this.gameJoined = false;
     this.isBotsTurn = false;
     this.botNames = [
-      'base-napoleon-bot-aparte',
+      'base-napoleon-bot-apart',
       'base-bot-alexander',
       'base-bot-julius-caesar',
       'base-bot-mark-antony'
@@ -258,7 +258,7 @@ module.exports = class BaseBot extends BotConnection {
       process.exit(0);
     }
 
-    logger.info('I lost! :( May the scripter improve my logic');
+    logger.info('I lost! :(');
     process.exit(1);
   }
 

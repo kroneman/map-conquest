@@ -52,6 +52,7 @@ $button-primary: (
     cursor: pointer;
     transition: all .2s ease-in-out;
     display: flex;
+    align-items: center;
     flex-wrap: nowrap;
     @include button-variant($button-primary);
   }

@@ -4,8 +4,8 @@
   "description": "A risk-like game where conquering the entire map is the objective",
   "main": "index.js",
   "scripts": {
-    "start": "node ./server/server.js",
-    "dev": "nodemon ./server/server.js",
+    "start": "npm run build && node ./server/server.js",
+    "dev": "npm run build && nodemon ./server/server.js",
     "build": "webpack",
     "watch": "webpack -w",
     "lint": "eslint *.js",
@@ -15,9 +15,7 @@
     "validate-mapbox-dataset": "node ./tools/validate-mapbox-dataset.js",
     "mapbox-dataset-add-center-of-mass": "node ./tools/mapbox-dataset-add-center-of-mass.js",
     "create-territory-list": "node ./tools/create-territory-list.js",
-    "bot-spectator": "nodemon bots/spectator.js --config ./nodemon.bots.json",
-    "bot:dev": "nodemon ./bots/bot.js --config ./nodemon.bots.json",
-    "bot-challenger:dev": "nodemon ./bots/challenger.js --config ./nodemon.bots.json",
+    "bot": "nodemon --config ./nodemon.bots.json ./bots/botRunner.js ",
     "territory-graph": "nodemon ./tools/graph/territoryGraph.js",
     "test": "mocha --recursive ./server/**/*.test.js"
   },
@@ -33,7 +31,8 @@
     "fs-extra": "^8.1.0",
     "geojson-to-svg": "git://github.com/kroneman/geojson2svg.git#add-attributes",
     "html-webpack-plugin": "^3.2.0",
-    "lodash": "^4.17.15",
+    "inquirer": "^7.3.2",
+    "lodash": "^4.17.19",
     "mini-css-extract-plugin": "^0.7.0",
     "proj4": "^2.5.0",
     "socket.io": "^2.2.0",
@@ -41,7 +40,8 @@
     "vue": "^2.6.10",
     "vue-router": "^3.0.7",
     "vuex": "^3.1.1",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "yargs": "^15.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -62,8 +62,8 @@
     "file-loader": "^4.0.0",
     "husky": "^3.0.3",
     "lint-staged": "^9.2.1",
-    "mocha": "^7.0.1",
-    "node-sass": "^4.13.1",
+    "mocha": "^8.0.1",
+    "node-sass": "^4.14.1",
     "nodemon": "^1.19.1",
     "sass-loader": "^7.1.0",
     "scss-loader": "0.0.1",
