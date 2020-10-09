@@ -1,15 +1,17 @@
 const { spawn } = require('child_process');
 const path = require('path');
 const logger = require('../../logger');
+const botTypes = require('../../../bots/types.js');
 
-const botScriptLocation = path.resolve('./bots/bot.js');
+const botScriptLocation = path.resolve('./bots/botRunner.js');
+const botOptions = Object.keys(botTypes);
 
 /**
   * @param {ChildProcess} botSpawn https://nodejs.org/api/child_process.html#child_process_class_childprocess
   * @returns {void}
   */
-const handleProcessEvents = (botProcess) => {
-  const botLogPrefix = `BOT-${botProcess.pid}`;
+const handleProcessEvents = (botProcess, type) => {
+  const botLogPrefix = `BOT-${botProcess.pid}-${type}`;
   logger.info(`${botLogPrefix}: Spawning`);
   botProcess.on('error', () => logger.info(`${botLogPrefix}: Failed to start subprocess.`));
   botProcess.stdout.on('data', data => logger.info(`${botLogPrefix}: %s`, data));
@@ -37,11 +39,18 @@ module.exports = ConnectionClass => class extends ConnectionClass {
 
   /**
    * Creates a bot subprocess
+   * @param {String} botType
    * @returns {void}
    */
-  spawnBot() {
-    const botSpawn = spawn('node', [botScriptLocation], {});
-    handleProcessEvents(botSpawn);
+  spawnBot(botType = 'default') {
+    const isValidBotType = botOptions.includes(botType);
+    if (!isValidBotType) {
+      return;
+    }
+
+    const spawnArgs = botType ? ['-t', botType] : [];
+    const botSpawn = spawn('node', [botScriptLocation, ...spawnArgs], {});
+    handleProcessEvents(botSpawn, botType);
     this.botProcesses.push(botSpawn);
   }
 

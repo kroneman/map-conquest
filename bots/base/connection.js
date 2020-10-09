@@ -1,7 +1,7 @@
 const path = require('path');
 const io = require('socket.io-client');
 
-const logger = require('./logger');
+const logger = require('../helpers/logger');
 
 const { PORT, SOCKET_ENDPOINT } = process.env;
 const socketEndpoint = SOCKET_ENDPOINT || `http://localhost:${PORT || 3000}`;

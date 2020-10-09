@@ -2,34 +2,13 @@ const yargs = require('yargs');
 const inquirer = require('inquirer');
 const compose = require('lodash/fp/compose');
 
-const BaseBot = require('./base');
-const ContinentBasedAttack = require('./mixins/continentBasedAttack');
-const PointBasedAttack = require('./mixins/pointBasedAttack');
-
-const botTypes = {
-  default: {
-    base: BaseBot,
-    props: {},
-    mixins: [
-      ContinentBasedAttack
-    ]
-  },
-  challenger: {
-    base: BaseBot,
-    props: {
-      name: 'challenger'
-    },
-    mixins: [
-      PointBasedAttack
-    ]
-  }
-};
+const botTypes = require('./types');
 
 const promptConfig = {
   type: 'list',
   name: 'botType',
   message: 'Which bot should be spawned?',
-  choices: ['default', 'challenger']
+  choices: Object.keys(botTypes)
 };
 
 main();
@@ -53,6 +32,10 @@ async function getBotType() {
   const { argv } = yargs.help().alias('help', 'h');
   if (argv && argv.type) {
     return argv.type;
+  }
+
+  if (argv && argv.t) {
+    return argv.t;
   }
 
   const answer = await inquirer.prompt([promptConfig]);

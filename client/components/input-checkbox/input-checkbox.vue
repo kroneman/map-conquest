@@ -1,6 +1,7 @@
 <template>
   <div class="input-checkbox__wrapper">
     <input
+      :id="name"
       class="input-checkbox"
       type="checkbox"
       :name="name"

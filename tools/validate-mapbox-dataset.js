@@ -1,6 +1,6 @@
 const map = require('lodash/map');
 const every = require('lodash/every');
-const dataset = require('../data/mapboxdataset.json');
+const dataset = require('../data/mapbox-dataset.json');
 
 const { features } = dataset;
 

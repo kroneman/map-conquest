@@ -4,6 +4,7 @@ $input-checkbox-background: transparent !default;
 $input-checkbox-color: #fff !default;
 $input-checkbox-border-bottom: 1px solid #fff !default;
 $input-checkbox-outline-color: darken(#fff, 15%) !default;
+$input-checkbox-spacing-right: 10px !default;
 
 .input-checkbox {
   background: $input-checkbox-background;
@@ -11,7 +12,7 @@ $input-checkbox-outline-color: darken(#fff, 15%) !default;
   border: none;
   border-bottom: $input-checkbox-border-bottom;
   width: auto;
-  margin-right: 10px;
+  margin-right: $input-checkbox-spacing-right;
   display: inline-block;
 
   &:hover {
@@ -29,5 +30,10 @@ $input-checkbox-outline-color: darken(#fff, 15%) !default;
     width: 100%;
     justify-content: flex-start;
     align-items: center;
+  }
+
+  &__label {
+    user-select: none;
+    cursor: pointer;
   }
 }

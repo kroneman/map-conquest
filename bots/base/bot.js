@@ -5,8 +5,8 @@ const reduce = require('lodash/reduce');
 const has = require('lodash/has');
 const sample = require('lodash/sample');
 
-const logger = require('./helpers/logger');
-const BotConnection = require('./helpers/connection');
+const logger = require('../helpers/logger');
+const BotConnection = require('./connection');
 
 /**
  * Base implementation of bot

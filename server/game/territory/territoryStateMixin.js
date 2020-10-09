@@ -111,7 +111,6 @@ module.exports = GameInstanceState => class extends GameInstanceState {
    * @returns {object} success and [message]
    */
   claimTerritory(territoryID, player) {
-    console.log(this.territories);
     if (has(this.territories, territoryID)) {
       return {
         success: false,

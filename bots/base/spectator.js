@@ -1,5 +1,5 @@
 const BotConnection = require('./connection');
-const logger = require('./logger');
+const logger = require('../helpers/logger');
 
 /**
  * Spectator process
