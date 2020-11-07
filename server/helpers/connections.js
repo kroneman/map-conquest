@@ -63,8 +63,8 @@ module.exports = class Connection {
   onDisconnected() {
     logger.info(`${this.events.disconnect}: ${this.playerID}`);
 
-    const gameID = gameState.getRoomAssignment(this.playerID);
-    const gameInstance = gameState.getGameInstance(gameID);
+    const gameID = gameState.RoomManager.get(this.playerID);
+    const gameInstance = gameState.GameManager.get(gameID);
     if (!gameInstance || gameID === DEFAULT_ROOM) {
       return;
     }
@@ -110,7 +110,7 @@ module.exports = class Connection {
    */
   setConnectionToRoom(roomID) {
     this.socket.join(roomID);
-    gameState.assignToRoom(this.socket.id, roomID);
+    gameState.RoomManager.add(this.socket.id, roomID);
   }
 
   /**
@@ -120,7 +120,7 @@ module.exports = class Connection {
    */
   removeConnectionFromRoom(roomID) {
     this.socket.leave(roomID);
-    gameState.removeFromRoom(this.socket.id);
+    gameState.RoomManager.remove(this.socket.id);
   }
 
   /**
@@ -157,7 +157,7 @@ module.exports = class Connection {
    * @param {*} payload to send to listeners
    */
   emitToAllInGame(event, payload = {}) {
-    const gameID = gameState.getRoomAssignment(this.playerID);
+    const gameID = gameState.RoomManager.get(this.playerID);
     this.io.in(gameID).emit(event, payload);
   }
 

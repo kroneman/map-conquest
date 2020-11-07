@@ -1,19 +1,12 @@
 const winston = require('winston');
 const path = require('path');
-
-// Set to any of
-// error, warn, info, verbose, debug, silly
-// in order of verbosity
-const DEV_LOG_LEVEL = 'debug';
-const PROD_LOG_LEVEL = 'info';
-const { SERVER_LOG_LEVEL } = process.env;
+const getLogLevel = require('./getLogLevel');
 
 const LOGS_DIRECTORY = path.join(__dirname, '../logs');
-const LOG_LEVEL = process.env.NODE_ENV === 'production' ? PROD_LOG_LEVEL : DEV_LOG_LEVEL;
 const { Console, File } = winston.transports;
 
 module.exports = winston.createLogger({
-  level: SERVER_LOG_LEVEL || LOG_LEVEL,
+  level: getLogLevel(),
   format: winston.format.combine(
     winston.format.splat(),
     winston.format.json(),

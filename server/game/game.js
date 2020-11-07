@@ -58,8 +58,8 @@ class Game extends ConnectionClass {
     this.listGames();
 
     // delete a previous instance with the same name
-    gameState.deleteGameInstance(newGameID);
-    const gameInstance = gameState.getGameInstance(newGameID);
+    gameState.GameManager.delete(newGameID);
+    const gameInstance = gameState.GameManager.get(newGameID);
     this.addPlayerToGameInstance(gameInstance, gameSettings.joinAsSpectator);
 
     logger.debug(this.events.createGameSuccess);
@@ -68,7 +68,7 @@ class Game extends ConnectionClass {
 
   joinGame({ selectedGame, joinAsSpectator }) {
     const gameID = selectedGame;
-    const gameInstance = gameState.getGameInstance(gameID);
+    const gameInstance = gameState.GameManager.get(gameID);
 
     this.setConnectionToRoom(gameID);
     this.listGames();
@@ -87,7 +87,7 @@ class Game extends ConnectionClass {
       id: this.socket.id
     };
 
-    const gameInstance = gameState.getGameInstance(this.gameID);
+    const gameInstance = gameState.GameManager.get(this.gameID);
     const isGamePlayer = gameInstance.isPlayer(memberToRemove.id);
     if (isGamePlayer) {
       gameInstance.removePlayer(memberToRemove.id);
@@ -100,7 +100,7 @@ class Game extends ConnectionClass {
 
     const { hasSpectators, hasPlayers } = gameInstance.hasSpectators;
     if (!hasSpectators && !hasPlayers) {
-      gameState.deleteGameInstance(this.gameID);
+      gameState.GameManager.delete(this.gameID);
     }
 
     const gameRoom = this.rooms[this.gameID];
@@ -120,7 +120,7 @@ class Game extends ConnectionClass {
     logger.debug(this.events.listGames);
     const filteredGames = this.filteredRooms();
     const gamesWithSpectators = filteredGames.map((game) => {
-      const gameInstance = gameState.getGameInstance(game);
+      const gameInstance = gameState.GameManager.get(game);
       return {
         spectators: gameInstance.spectators.length,
         ...game

@@ -1,23 +1,17 @@
 const winston = require('winston');
 const path = require('path');
 
+const getLogLevel = require('./getLogLevel');
+
 require('dotenv').config({
   path: path.resolve('.env')
 });
 
-// Set to any of
-// error, warn, info, verbose, debug, silly
-// in order of verbosity
-const DEV_LOG_LEVEL = 'debug';
-const PROD_LOG_LEVEL = 'info';
-const { BOT_LOG_LEVEL } = process.env;
-
 const LOGS_DIRECTORY = path.resolve('./logs');
-const LOG_LEVEL = process.env.NODE_ENV === 'production' ? PROD_LOG_LEVEL : DEV_LOG_LEVEL;
 const { Console, File } = winston.transports;
 
 module.exports = winston.createLogger({
-  level: BOT_LOG_LEVEL || LOG_LEVEL,
+  level: getLogLevel(),
   format: winston.format.combine(
     winston.format.splat(),
     winston.format.json(),

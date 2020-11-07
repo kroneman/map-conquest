@@ -21,12 +21,12 @@ module.exports = ConnectionClass => class extends ConnectionClass {
    */
   addChatMessage(message) {
     logger.debug(this.events.chatMessageSent);
-    const gameID = gameState.getRoomAssignment(this.playerID);
+    const gameID = gameState.RoomManager.get(this.playerID);
     if (!gameID) {
       return;
     }
 
-    const gameInstance = gameState.getGameInstance(gameID);
+    const gameInstance = gameState.GameManager.get(gameID);
     const isPlayer = gameInstance.isPlayer(this.playerID);
     const method = isPlayer ? 'getPlayer' : 'getSpectator';
     const player = gameInstance[method](this.playerID);

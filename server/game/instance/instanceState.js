@@ -24,15 +24,16 @@ const combinedFeatures = compose(
   chatMixin
 );
 
-const {
-  DEBUG_GAME_PLACEMENT_MODE,
-  DEBUG_GAME_REINFORCEMENT_MODE
-} = process.env;
-
 class GameInstanceState {
   constructor(props) {
     this.id = props.id;
     this.name = props.id;
+
+    // placing this in the constructor allows for mocking env variables when testing
+    const {
+      DEBUG_GAME_PLACEMENT_MODE,
+      DEBUG_GAME_REINFORCEMENT_MODE
+    } = process.env;
 
     // options to start game as determined by server
     this.placementMode = DEBUG_GAME_PLACEMENT_MODE || 'manual';

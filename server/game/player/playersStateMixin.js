@@ -176,7 +176,7 @@ module.exports = GameInstanceState => class extends GameInstanceState {
   }
 
   /**
-   * Updates the currently active players's turn
+   * Updates the currently active player's turn
    * @returns {object} of the current player's turn
    */
   updatePlayersTurn() {

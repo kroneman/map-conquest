@@ -19,14 +19,15 @@ module.exports = ConnectionClass => class extends ConnectionClass {
    * Updates the name of a connection
    */
   updatePlayer(playerData) {
-    logger.debug(this.events.updatePlayerName);
-    const gameID = gameState.getRoomAssignment(this.playerID);
+    logger.debug(this.events.updatePlayer);
+    const gameID = gameState.RoomManager.get(this.playerID);
     if (!gameID) {
-      return;
+      return false;
     }
 
-    const gameInstance = gameState.getGameInstance(gameID);
+    const gameInstance = gameState.GameManager.get(gameID);
     gameInstance.updatePlayer(this.playerID, playerData);
     this.io.in(gameID).emit(this.events.gameDetails, gameInstance);
+    return true;
   }
 };

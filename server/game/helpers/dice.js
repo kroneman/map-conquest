@@ -1,10 +1,23 @@
-const MAX_DICE = 3;
-const diceRoll = () => Math.floor(Math.random() * 6) + 1;
+const MAX_ATTACKER_DICE = 3;
+const MAX_DEFENDER_DICE = 2;
 
-module.exports = {
+const diceRoll = () => Math.floor(Math.random() * 6) + 1;
+const getNumAttackingDice = armies => Math.min(armies - 1, MAX_ATTACKER_DICE);
+const getNumDefendingDice = armies => Math.min(armies, MAX_DEFENDER_DICE);
+const getIsDefenderBased = (numAttackers, numDefenders) => Math.min(
+  numAttackers,
+  numDefenders
+) === numDefenders;
+
+// placing diceRoll here and
+// calling diceRoll in sortedDiceRollsForPlayer
+// makes it possible to stub diceRoll
+const publicMethods = {
   territoryDiceRoll,
   sortedDiceRollsForPlayer,
-  diceRoll
+  diceRoll,
+  getNumAttackingDice,
+  getNumDefendingDice
 };
 
 /**
@@ -15,18 +28,16 @@ module.exports = {
  * @returns {object}
  */
 function territoryDiceRoll({ attackingTerritory, defendingTerritory }) {
-  const numAttackingDice = (attackingTerritory.armies - 1) >= MAX_DICE
-    ? MAX_DICE : (attackingTerritory.armies - 1);
-  const numDefendingDice = defendingTerritory.armies >= (MAX_DICE - 1)
-    ? (MAX_DICE - 1) : defendingTerritory.armies;
+  const numAttackingDice = getNumAttackingDice(attackingTerritory.armies);
+  const numDefendingDice = getNumDefendingDice(defendingTerritory.armies);
+  const attackingTerritoryDiceRolls = publicMethods.sortedDiceRollsForPlayer(numAttackingDice);
+  const defendingTerritoryDiceRolls = publicMethods.sortedDiceRollsForPlayer(numDefendingDice);
 
-  const attackingTerritoryDiceRolls = sortedDiceRollsForPlayer(numAttackingDice);
-  const defendingTerritoryDiceRolls = sortedDiceRollsForPlayer(numDefendingDice);
-
-  const isDefenderBased = Math.min(
+  const isDefenderBased = getIsDefenderBased(
     attackingTerritoryDiceRolls.length,
     defendingTerritoryDiceRolls.length
-  ) === defendingTerritoryDiceRolls.length;
+  );
+
   const usedLessDice = isDefenderBased
     ? defendingTerritoryDiceRolls : attackingTerritoryDiceRolls;
 
@@ -57,5 +68,7 @@ function sortedDiceRollsForPlayer(numDice) {
   const descending = (a, b) => b - a;
   const rollArray = [];
   rollArray.length = numDice;
-  return [...rollArray].map(diceRoll).sort(descending);
+  return [...rollArray].map(publicMethods.diceRoll).sort(descending);
 }
+
+module.exports = publicMethods;

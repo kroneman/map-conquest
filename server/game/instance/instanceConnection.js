@@ -52,12 +52,12 @@ module.exports = ConnectionClass => class extends ConnectionClass {
   }
 
   get gameID() {
-    return gameState.getRoomAssignment(this.playerID);
+    return gameState.RoomManager.get(this.playerID);
   }
 
   get gameInstance() {
-    const gameID = gameState.getRoomAssignment(this.playerID);
-    return gameState.getGameInstance(gameID);
+    const gameID = gameState.RoomManager.get(this.playerID);
+    return gameState.GameManager.get(gameID);
   }
 
   startGame() {
@@ -213,7 +213,7 @@ module.exports = ConnectionClass => class extends ConnectionClass {
       };
 
       // if after transferring dice rolls there are no armies to reinforce with
-      // dont give players the option
+      // don't give players the option
       const hasTransferrableArmies = updatedAttackerTerritory.armies > 1;
       if (hasTransferrableArmies) {
         this.socket.emit(this.events.attackTerritorySuccess, {
@@ -314,7 +314,7 @@ module.exports = ConnectionClass => class extends ConnectionClass {
   }
 
   /**
-   * If there are unclaimed territories at the begginging of the game
+   * If there are unclaimed territories at the begging of the game
    * This grabs the territory for a player
    * @param {string} territoryName to claim
    * @returns {void}
