@@ -19,7 +19,7 @@ const handleProcessEvents = (botProcess, type) => {
   botProcess.on('exit', () => logger.info(`${botLogPrefix}: %s`, 'Exiting'));
 };
 
-module.exports = ConnectionClass => class extends ConnectionClass {
+module.exports = ConnectionClass => class BotSpawner extends ConnectionClass {
   constructor(props) {
     super(props);
 
@@ -37,6 +37,10 @@ module.exports = ConnectionClass => class extends ConnectionClass {
     process.on('exit', this.onServerDie.bind(this));
   }
 
+  static spawnArgs(botType) {
+    return botType ? ['-t', botType] : [];
+  }
+
   /**
    * Creates a bot subprocess
    * @param {String} botType
@@ -48,7 +52,7 @@ module.exports = ConnectionClass => class extends ConnectionClass {
       return;
     }
 
-    const spawnArgs = botType ? ['-t', botType] : [];
+    const spawnArgs = BotSpawner.spawnArgs(botType);
     const botSpawn = spawn('node', [botScriptLocation, ...spawnArgs], {});
     handleProcessEvents(botSpawn, botType);
     this.botProcesses.push(botSpawn);
