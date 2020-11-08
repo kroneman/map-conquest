@@ -36,7 +36,7 @@ const State = TerritoryStateMixin(class StateExtendedTerritory {
 });
 const StateInstance = new State();
 
-describe('Server Territory State Mixin', () => {
+describe('territoryState', () => {
   it('StateInstance.availableTerritories', () => {
     // actual length should be 42, also this will vary based on the dataset
     expect(StateInstance.availableTerritories).to.have.lengthOf(42);
