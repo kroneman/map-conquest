@@ -12,57 +12,117 @@ const createDummySpectator = config => ({
   ...config
 });
 
-describe('Server Spectator State Mixin', () => {
-  it('StateInstance.addSpectator():', () => {
+describe('spectatorStateMixin', () => {
+  afterEach(() => {
     StateInstance.removeAllSpectators();
-
-    StateInstance.addSpectator(createDummySpectator());
-    expect(StateInstance.spectators).to.deep.include(
-      createDummySpectator()
-    );
   });
 
-  it('StateInstance.removeSpectator():', () => {
-    StateInstance.removeAllSpectators();
-
-    StateInstance.addSpectator(createDummySpectator({
-      id: 'uniqueOne'
-    }));
-    StateInstance.addSpectator(createDummySpectator({
-      id: 'uniqueTwo'
-    }));
-    StateInstance.addSpectator(createDummySpectator());
-    StateInstance.removeSpectator({
-      id: 'uniqueTwo'
+  describe('hasSpectators', () => {
+    it('Should return false if the game has no spectators', () => {
+      expect(StateInstance.hasSpectators).to.equal(false);
     });
-    expect(StateInstance.spectators).to.deep.include(
-      createDummySpectator({
+
+    it('Should return true once the game has spectators', () => {
+      const spectator = createDummySpectator({ id: 'spectator_one' });
+      StateInstance.addSpectator(spectator);
+
+      expect(StateInstance.hasSpectators).to.equal(true);
+    });
+  });
+
+  describe('addSpectator(player)', () => {
+    it('Should add a spectator', () => {
+      const spectator = createDummySpectator({ id: 'spectator_one' });
+
+      const result = StateInstance.addSpectator(spectator);
+
+      expect(result).to.equal(true);
+      expect(StateInstance.spectators).to.deep.include(spectator);
+    });
+
+    it('Should not add a spectator with a duplicate id', () => {
+      const spectatorOne = createDummySpectator({ id: 'spectator_one' });
+      const spectatorTwo = createDummySpectator({ id: 'spectator_one', someProperty: 'test' });
+
+      const resultOne = StateInstance.addSpectator(spectatorOne);
+      const resultTwo = StateInstance.addSpectator(spectatorTwo);
+
+      expect(resultOne).to.equal(true);
+      expect(resultTwo).to.equal(false);
+      expect(StateInstance).to.deep.equal({
+        spectators: [spectatorOne]
+      });
+    });
+  });
+
+  describe('removeSpectator(player)', () => {
+    it('Should not remove a spectator that doesn\'t exist', () => {
+      const nonExistentSpectator = createDummySpectator({
         id: 'uniqueOne'
-      })
-    );
-  });
+      });
 
-  it('StateInstance.getSpectator():', () => {
-    StateInstance.removeAllSpectators();
-    const spectator = createDummySpectator({
-      id: 'getSpectatorID'
+      StateInstance.removeSpectator({
+        id: nonExistentSpectator.id
+      });
     });
 
-    StateInstance.addSpectator(spectator);
-
-    const retrievedSpectator = StateInstance.getSpectator('getSpectatorID');
-    expect(retrievedSpectator).to.deep.equal(spectator);
+    it('Should only remove the spectator with the id passed as an argument', () => {
+      StateInstance.addSpectator(createDummySpectator({
+        id: 'unique_One'
+      }));
+      StateInstance.addSpectator(createDummySpectator({
+        id: 'unique_two'
+      }));
+      StateInstance.removeSpectator({
+        id: 'unique_two'
+      });
+      expect(StateInstance.spectators).to.deep.equal([
+        createDummySpectator({
+          id: 'unique_One'
+        })
+      ]);
+    });
   });
 
-  it('StateInstance.isSpectator():', () => {
-    StateInstance.removeAllSpectators();
-    const spectator = createDummySpectator({
-      id: 'isSpectatorID'
+  describe('getSpectator(id)', () => {
+    it('Should return a spectator by id', () => {
+      const spectator = createDummySpectator({
+        id: 'getSpectatorID'
+      });
+
+      StateInstance.addSpectator(spectator);
+
+      const retrievedSpectator = StateInstance.getSpectator('getSpectatorID');
+      expect(retrievedSpectator).to.deep.equal(spectator);
     });
 
-    StateInstance.addSpectator(spectator);
+    it('Should return when a spectator with the given id is not found', () => {
+      const spectator = createDummySpectator({
+        id: 'getSpectatorID'
+      });
 
-    const isSpectator = StateInstance.isSpectator(spectator.id);
-    expect(isSpectator).to.deep.equal(true);
+      StateInstance.addSpectator(spectator);
+
+      const retrievedSpectator = StateInstance.getSpectator('getSpectator_no_id');
+      expect(retrievedSpectator).to.deep.equal(null);
+    });
+  });
+
+  describe('isSpectator(id)', () => {
+    it('Should return true if the game has a spectator with the given id', () => {
+      const spectator = createDummySpectator({
+        id: 'isSpectatorID'
+      });
+
+      StateInstance.addSpectator(spectator);
+
+      const isSpectator = StateInstance.isSpectator(spectator.id);
+      expect(isSpectator).to.deep.equal(true);
+    });
+
+    it('Should return false if the game does not have a spectator with the given id', () => {
+      const isSpectator = StateInstance.isSpectator('spectator.id');
+      expect(isSpectator).to.deep.equal(false);
+    });
   });
 });

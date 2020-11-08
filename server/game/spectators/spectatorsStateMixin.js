@@ -46,7 +46,7 @@ module.exports = GameInstanceState => class extends GameInstanceState {
    * @returns {object}
    */
   getSpectator(id) {
-    return find(this.spectators, spectator => id === spectator.id);
+    return find(this.spectators, spectator => id === spectator.id) || null;
   }
 
   /**
