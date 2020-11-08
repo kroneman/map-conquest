@@ -111,11 +111,11 @@ module.exports = GameInstanceState => class extends GameInstanceState {
    */
   getPlayer(id) {
     if (!isString(id)) {
-      // Not sure if i like empty objects
-      return {};
+      return null;
     }
 
-    return find(this.players, player => player.id === id);
+    const result = find(this.players, player => player.id === id);
+    return result || null;
   }
 
   /**
@@ -180,7 +180,14 @@ module.exports = GameInstanceState => class extends GameInstanceState {
    * @returns {object} of the current player's turn
    */
   updatePlayersTurn() {
-    if (this.playerTurnIndex === (this.players.length - 1)) {
+    const isOnlyOnePlayerInGame = this.players.length === 1;
+    if (isOnlyOnePlayerInGame) {
+      this.playerTurnIndex = 0;
+      return this.playerTurn;
+    }
+
+    const isStartAtBeginning = this.playerTurnIndex === (this.players.length - 1);
+    if (isStartAtBeginning) {
       this.playerTurnIndex = 0;
       return this.playerTurn;
     }

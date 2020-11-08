@@ -1,3 +1,4 @@
+const sinon = require('sinon');
 const { expect } = require('chai');
 const PlayerStateMixin = require('./playersStateMixin');
 
@@ -14,144 +15,254 @@ const createDummyPlayer = config => ({
   ...config
 });
 
-describe('Server Player State Mixin', () => {
-  it('StateInstance.removeInactivePlayers():', () => {
-    expect(StateInstance).to.deep.include({ players: [] });
+describe('playerState', () => {
+  before(() => {
+    sinon.stub(console, 'warn');
+  });
 
-    StateInstance.addPlayer(createDummyPlayer({ id: 'one' }));
-    StateInstance.addPlayer(createDummyPlayer({ id: 'two' }));
-    StateInstance.addPlayer(createDummyPlayer({ id: 'three' }));
-    StateInstance.addPlayer(createDummyPlayer({ id: 'four' }));
+  after(() => {
+    // eslint-disable-next-line no-console
+    console.warn.restore();
+  });
 
-    StateInstance.removeInactivePlayers([
-      'two', 'four'
-    ]);
-
-    expect(StateInstance).to.deep.include({
-      players: [
-        createDummyPlayer({ id: 'two' }),
-        createDummyPlayer({ id: 'four' })
-      ]
+  describe('playerTurn', () => {
+    afterEach(() => {
+      StateInstance.removeInactivePlayers([]);
     });
-  });
 
-  it('StateInstance.addPlayer():', () => {
-    StateInstance.removeInactivePlayers([]);
+    it('Should be null when there are no players', () => {
+      expect(StateInstance.playerTurn).to.equal(null);
+    });
 
-    const playerInfo = createDummyPlayer();
-    StateInstance.addPlayer(playerInfo);
-
-    expect(StateInstance).to.deep.include({ players: [playerInfo] });
-  });
-
-
-  it('StateInstance.addPlayer():', () => {
-    StateInstance.removeInactivePlayers([]);
-
-    const duplicatePlayer = createDummyPlayer({ id: 'duplicateID' });
-    const returnedTrue = StateInstance.addPlayer(duplicatePlayer);
-    const returnedFalse = StateInstance.addPlayer(duplicatePlayer);
-
-    // if adding is successful return true, if unsuccessfull return false
-    expect(returnedTrue).to.equal(true);
-    expect(returnedFalse).to.equal(false);
-    expect(StateInstance).to.deep.include({
-      players: [
+    it('Should be the player when the player is added', () => {
+      StateInstance.addPlayer(createDummyPlayer({ id: 'duplicateID' }));
+      expect(StateInstance.playerTurn).to.deep.equal(
         createDummyPlayer({ id: 'duplicateID' })
-      ]
+      );
     });
   });
 
-  it('StateInstance.removePlayer():', () => {
-    StateInstance.removeInactivePlayers([]);
+  describe('hasPlayers', () => {
+    afterEach(() => {
+      StateInstance.removeInactivePlayers([]);
+    });
 
-    StateInstance.addPlayer(createDummyPlayer({ id: 'duplicateID' }));
-    StateInstance.removePlayer('duplicateID');
+    it('Should return false when no players are in state', () => {
+      expect(StateInstance.hasPlayers).to.equal(false);
+    });
 
-    expect(StateInstance).to.deep.include({
-      players: []
+    it('Should return true when a player is added to state', () => {
+      StateInstance.addPlayer(createDummyPlayer({ id: 'nonExistentPlayer' }));
+      expect(StateInstance.hasPlayers).to.equal(true);
     });
   });
 
-  it('StateInstance.getPlayer():', () => {
-    StateInstance.removeInactivePlayers([]);
-    const playerToCreateThenRetrieve = createDummyPlayer({ id: 'retrievedPlayerID' });
-
-    StateInstance.addPlayer(playerToCreateThenRetrieve);
-    const retrievedPlayer = StateInstance.getPlayer('retrievedPlayerID');
-
-    expect(retrievedPlayer).to.deep.equal(playerToCreateThenRetrieve);
-  });
-
-  it('StateInstance.updatePlayer():', () => {
-    StateInstance.removeInactivePlayers([]);
-
-    StateInstance.addPlayer(createDummyPlayer({ id: 'playerToUpdate' }));
-    StateInstance.updatePlayer('playerToUpdate', { nonExistingAttribute: '' });
-
-    const player = StateInstance.getPlayer('playerToUpdate');
-    expect(player).to.deep.include({ nonExistingAttribute: '' });
-  });
-
-  it('StateInstance.isPlayer():', () => {
-    StateInstance.removeInactivePlayers([]);
-
-    const isPlayer = StateInstance.isPlayer('nonExistentPlayer');
-    expect(isPlayer).to.equal(false);
-
-    StateInstance.addPlayer(createDummyPlayer({ id: 'nonExistentPlayer' }));
-
-    const isNowAPlayer = StateInstance.isPlayer('nonExistentPlayer');
-    expect(isNowAPlayer).to.equal(true);
-  });
-
-  it('StateInstance.playerTurn:', () => {
-    StateInstance.removeInactivePlayers([]);
-    expect(StateInstance.playerTurn).to.equal(null);
-
-    const playerWhosTurnItIs = createDummyPlayer({ id: 'playerWhosTurnItIs' });
-
-    StateInstance.addPlayer(playerWhosTurnItIs);
-    StateInstance.addPlayer(createDummyPlayer({ id: 'nextPlayer' }));
-
-    expect(StateInstance.playerTurn).to.deep.equal(playerWhosTurnItIs);
-  });
-
-  it('StateInstance.updatePlayersTurn():', () => {
-    StateInstance.removeInactivePlayers([]);
-
-    const firstPlayer = createDummyPlayer({ id: 'firstPlayer' });
-    const secondPlayer = createDummyPlayer({ id: 'secondPlayer' });
-    const thirdPlayer = createDummyPlayer({ id: 'thirdPlayer' });
-
-    StateInstance.addPlayer(firstPlayer);
-    StateInstance.addPlayer(secondPlayer);
-    StateInstance.addPlayer(thirdPlayer);
-
-    expect(StateInstance.playerTurn).to.deep.equal(firstPlayer);
-    StateInstance.updatePlayersTurn();
-    expect(StateInstance.playerTurn).to.deep.equal(secondPlayer);
-    StateInstance.updatePlayersTurn();
-    expect(StateInstance.playerTurn).to.deep.equal(thirdPlayer);
-    StateInstance.updatePlayersTurn();
-    expect(StateInstance.playerTurn).to.deep.equal(firstPlayer);
-  });
-
-  it('StateInstance.colorOptions: update based on colors taken by players', () => {
-    StateInstance.removeInactivePlayers([]);
-
-    const originalColorOptions = [...StateInstance.colorOptions];
-    const firstPlayer = createDummyPlayer({
-      id: 'colorOptions',
-      color: originalColorOptions[0]
+  describe('isPlayer(id)', () => {
+    afterEach(() => {
+      StateInstance.removeInactivePlayers([]);
     });
 
-    StateInstance.addPlayer(firstPlayer);
+    it('Should return false when non-existent player id is checked', () => {
+      const isPlayer = StateInstance.isPlayer('nonExistentPlayer');
+      expect(isPlayer).to.equal(false);
+    });
 
-    const updatedColor = originalColorOptions.filter(colors => colors !== originalColorOptions[0]);
-    expect(StateInstance.colorOptions).to.deep.equal(updatedColor);
+    it('Should return true when existing playerID is checked', () => {
+      StateInstance.addPlayer(createDummyPlayer({ id: 'nonExistentPlayer' }));
 
-    StateInstance.removePlayer(firstPlayer.id);
-    expect(StateInstance.colorOptions).to.deep.equal(originalColorOptions);
+      const isNowAPlayer = StateInstance.isPlayer('nonExistentPlayer');
+      expect(isNowAPlayer).to.equal(true);
+    });
+  });
+
+  describe('addPlayer(player)', () => {
+    afterEach(() => {
+      StateInstance.removeInactivePlayers([]);
+    });
+
+    it('Should be able to add a player to state', () => {
+      StateInstance.addPlayer(createDummyPlayer({ id: 'two' }));
+      expect(StateInstance).to.deep.include({
+        players: [
+          createDummyPlayer({ id: 'two' })
+        ]
+      });
+    });
+
+    it('Should not be able to add a player with the same id', () => {
+      const firstAdd = StateInstance.addPlayer(createDummyPlayer({ id: 'duplicateID' }));
+      const secondAdd = StateInstance.addPlayer(createDummyPlayer({ id: 'duplicateID' }));
+
+      expect(firstAdd).to.equal(true);
+      expect(secondAdd).to.equal(false);
+      expect(StateInstance).to.deep.include({
+        players: [
+          createDummyPlayer({ id: 'duplicateID' })
+        ]
+      });
+    });
+  });
+
+  describe('removePlayer(id)', () => {
+    afterEach(() => {
+      StateInstance.removeInactivePlayers([]);
+    });
+
+    it('Should fail when no id is passed', () => {
+      const result = StateInstance.removePlayer();
+      expect(result).to.equal(false);
+    });
+
+    it('Should fail when the player doesn\'t exist in state', () => {
+      const result = StateInstance.removePlayer('dummy_id');
+      expect(result).to.equal(false);
+    });
+
+    it('Should remove a player', () => {
+      // setup
+      [
+        createDummyPlayer({ id: 'first_player' }),
+        createDummyPlayer({ id: 'second_player' })
+      ].forEach(player => StateInstance.addPlayer(player));
+
+      // execution
+      const result = StateInstance.removePlayer('first_player');
+
+      // result
+      expect(result).to.equal(true);
+      expect(StateInstance).to.deep.include({
+        players: [
+          createDummyPlayer({ id: 'second_player' })
+        ]
+      });
+    });
+  });
+
+  describe('getPlayer(id)', () => {
+    afterEach(() => {
+      StateInstance.removeInactivePlayers([]);
+    });
+
+    it('Should return an empty object when no id is provided', () => {
+      const result = StateInstance.getPlayer();
+      expect(result).to.deep.equal(null);
+    });
+
+    it('Should return an empty object when the player isn\'t found', () => {
+      const result = StateInstance.getPlayer('some_id');
+      expect(result).to.deep.equal(null);
+    });
+
+    it('Should return the player when found', () => {
+      const createdPlayer = createDummyPlayer({ id: 'player_to_find' });
+      [
+        createdPlayer,
+        createDummyPlayer({ id: 'second_player' }),
+        createDummyPlayer({ id: 'third_player' })
+      ].forEach(player => StateInstance.addPlayer(player));
+
+      const getPlayerResult = StateInstance.getPlayer('player_to_find');
+      expect(getPlayerResult).to.deep.equal(createdPlayer);
+    });
+  });
+
+  describe('updatePlayer(id, playerData)', () => {
+    afterEach(() => {
+      StateInstance.removeInactivePlayers([]);
+    });
+
+    it('Should return false when no players are present', () => {
+      const result = StateInstance.updatePlayer('player_id', {});
+      expect(result).to.equal(false);
+    });
+
+    it('Should not update a player with a different id', () => {
+      const createdPlayer = createDummyPlayer({ id: 'player_added' });
+      StateInstance.addPlayer(createdPlayer);
+
+      const result = StateInstance.updatePlayer('player_id', {});
+      expect(result).to.equal(false);
+    });
+
+    it('Should not update a player with the same id', () => {
+      const createdPlayer = createDummyPlayer({ id: 'player_added' });
+      StateInstance.addPlayer(createdPlayer);
+
+      const result = StateInstance.updatePlayer('player_added', {});
+      expect(result).to.equal(true);
+    });
+  });
+
+  describe('removeInactivePlayers(activePlayers = [])', () => {
+    it('Should return false when a falsy value is passed', () => {
+      const result = StateInstance.removeInactivePlayers(null);
+      expect(result).to.equal(false);
+    });
+
+    it('Should return false when anything other than an array is passed', () => {
+      const result = StateInstance.removeInactivePlayers({});
+      expect(result).to.equal(false);
+    });
+
+    it('Should return true when filtering by argument', () => {
+      const result = StateInstance.removeInactivePlayers([]);
+      expect(result).to.equal(true);
+    });
+
+    it('Should default to an empty list of active players', () => {
+      const result = StateInstance.removeInactivePlayers();
+      expect(result).to.equal(true);
+    });
+  });
+
+  describe('isPlayersTurn(id)', () => {
+    afterEach(() => {
+      StateInstance.removeInactivePlayers([]);
+    });
+
+    it('Should return false when player doesn\'t exist', () => {
+      const result = StateInstance.isPlayersTurn('non_existing_player_id');
+      expect(result).to.equal(false);
+    });
+
+    it('Should return false when player doesn\'t exist', () => {
+      const createdPlayer = createDummyPlayer({ id: 'player_added' });
+      StateInstance.addPlayer(createdPlayer);
+
+      const result = StateInstance.isPlayersTurn('player_added');
+      expect(result).to.equal(true);
+    });
+  });
+
+  describe('updatePlayersTurn()', () => {
+    afterEach(() => {
+      StateInstance.removeInactivePlayers([]);
+    });
+
+    it('Should be null when no players are in the game', () => {
+      const result = StateInstance.updatePlayersTurn();
+      expect(result).to.equal(null);
+    });
+
+    it('When one player is in the game it should be their turn', () => {
+      const createdPlayer = createDummyPlayer({ id: 'player_added' });
+      StateInstance.addPlayer(createdPlayer);
+
+      const result = StateInstance.updatePlayersTurn();
+      expect(result).to.deep.equal(createdPlayer);
+    });
+
+    it('When a cycle is completed it should start back with the first player', () => {
+      const firstPlayer = createDummyPlayer({ id: 'player_one' });
+      const secondPlayer = createDummyPlayer({ id: 'player_two' });
+      [
+        firstPlayer,
+        secondPlayer
+      ].forEach(player => StateInstance.addPlayer(player));
+
+      StateInstance.updatePlayersTurn();
+      const result = StateInstance.updatePlayersTurn();
+      expect(result).to.deep.equal(firstPlayer);
+    });
   });
 });
